@@ -194,9 +194,9 @@ if [ $exitstatus = 0 ]; then
 
         if [ $NomProtocole = adminExtensionLocalhostRestricted ]; then
         hostrestrictcp=$ligne
-	hostrestrict=$NomProtocole
+		hostrestrict=$NomProtocole
         hostrestrict2=$(echo $ligne|cut -d'"' -f2)
-	echo "Local host restricted : "$hostrestrict
+	echo "Local host restricted : "$hostrestrict2
         fi
 		
         if [ $NomProtocole = webReportingPort ]; then
