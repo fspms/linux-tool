@@ -291,7 +291,7 @@ if [ $exitstatus = 0 ]; then
                         fi
 
     fi
-    if [ "$OPTION" = "4" ]; then
+    if [ "$OPTION" = "04" ]; then
         echo "======================================="
         echo "========== CHECK SERVERS =============="
         echo "======================================="
@@ -352,7 +352,7 @@ if [ $exitstatus = 0 ]; then
 						
 						
 	
- if [ "$OPTION" = "3" ]; then
+ if [ "$OPTION" = "03" ]; then
         echo "======================================="
         echo "============ HOTFIX INSTALL ==========="
         echo "======================================="
@@ -390,7 +390,7 @@ if [ $exitstatus = 0 ]; then
       whiptail --title "Hotfix" --msgbox "Please install Policy Manager server first" 8 78
       fi
   fi
-  if [ "$OPTION" = "9" ]; then
+  if [ "$OPTION" = "09" ]; then
 	menu=1
   fi
 else
