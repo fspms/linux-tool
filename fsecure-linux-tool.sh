@@ -339,9 +339,9 @@ if [ $exitstatus = 0 ]; then
      echo  "Check f-secure.com = OK"
      fi
     fi
-	whiptail --title "Check F-Secure Servers" --msgbox "Software updater : $swupchk "\n" pdates servers : $bddchk \n"	10 60
+	#whiptail --title "Check F-Secure Servers" --msgbox "Software updater : $swupchk "\n" pdates servers : $bddchk \n"	10 60
 	
-						modifchk=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" 15 80 5 \
+						modifchk=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" --nocancel 15 80 5 \
                         "1" "Software updater : "$swupchk \
                         "2" "Updates servers : "$bddchk \
                         "3" "ORSP : "$orspchk 3>&1 1>&2 2>&3)
