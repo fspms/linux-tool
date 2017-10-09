@@ -313,27 +313,45 @@ if [ $exitstatus = 0 ]; then
 
      if [ ${#orspf} -gt 1 ]
      then
+	 orspchk="ERROR"
      echo  "Check orsp.f-secure.com = ERROR"
      else
+	 orspchk="OK"
      echo  "Check orsp.f-secure.com = OK"
      fi
 
 
      if [ ${#xmlshavlikf} -gt 1 ] || [ ${#avantif} -gt 1 ]
      then
+	 swupchk="ERROR"
      echo  "Check xml.shavlik.com and avanti = ERROR"
      else
+	 swupchk="OK"
      echo  "Check xml.shavlik.com and avanti = OK"
      fi
 
      if [ ${#fsecuref} -gt 1 ]
      then
+	 bddchk="ERROR"
      echo  "Check f-secure.com = ERROR"
      else
+	 bddchk="OK"
      echo  "Check f-secure.com = OK"
      fi
     fi
-    
+						modifpara=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" 15 80 5 \
+                        "Software updater : "$swupchk \
+                        "Updates servers : "$bddchk \
+                        "ORSP : "$orspchk 3>&1 1>&2 2>&3)
+                        exitchk=$?
+                        if [ $exitchk = 0 ]; then
+							echo "add check information"
+						else
+                          echo "return"
+                        fi
+						
+						
+	
  if [ "$OPTION" = "3" ]; then
         echo "======================================="
         echo "============ HOTFIX INSTALL ==========="
