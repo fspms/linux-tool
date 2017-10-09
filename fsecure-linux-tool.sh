@@ -338,7 +338,7 @@ if [ $exitstatus = 0 ]; then
 	 bddchk="OK"
      echo  "Check f-secure.com = OK"
      fi
-    fi
+
 	#whiptail --title "Check F-Secure Servers" --msgbox "Software updater : $swupchk "\n" pdates servers : $bddchk \n"	10 60
 	
 						modifchk=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" --nocancel 15 80 5 \
@@ -353,7 +353,7 @@ if [ $exitstatus = 0 ]; then
                         fi
 						
 						
-	
+	fi
  if [ "$OPTION" = "03" ]; then
         echo "======================================="
         echo "============ HOTFIX INSTALL ==========="
