@@ -392,9 +392,9 @@ if [ $exitstatus = 0 ]; then
       fi
   fi
   
-  if [ "$OPTION" = "5" ]; then
+	if [ "$OPTION" = "5" ]; then
   
-		
+	fi	
   fi
 else
 sleep 1
