@@ -472,7 +472,7 @@ if [ "$OPTION" = "5" ]; then
 							/etc/init.d/fspms start
 							fi
 							
-							whiptail --title "Recover" --msgbox "Save the recover database in "$desti 8 78
+							whiptail --title "Recover" --msgbox "The recover database is in "$desti 8 78
 							
 							else
 							echo "Back"
