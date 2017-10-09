@@ -159,7 +159,7 @@ if [ $exitstatus = 0 ]; then
         echo "Unsupported Operating System";
         fi
     fi
-    if [ "$OPTION" = "02" ]; then
+if [ "$OPTION" = "02" ]; then
         echo "======================================="
         echo "====== PORTS F-SECURE FSPMS ==========="
         echo "======================================="
@@ -220,9 +220,9 @@ if [ $exitstatus = 0 ]; then
                                 exits=$?
                                 if [ $exits = 0 ]; then
                                         remplace=$hostport"="'"'$Rehostport'"'
-                 			sed -i 's/'$hostportcp'/'$remplace'/g' $filename
-					/etc/init.d/fspms stop
-					/etc/init.d/fspms start
+										sed -i 's/'$hostportcp'/'$remplace'/g' $filename
+										/etc/init.d/fspms stop
+										/etc/init.d/fspms start
                                 else
                                 echo "Cancel"
                                 fi
@@ -233,53 +233,53 @@ if [ $exitstatus = 0 ]; then
                                 if [ $exits = 0 ]; then
                                         remplace=$hosthttps"="'"'$Rehosthttps'"'
                                         sed -i 's/'$hosthttpscp'/'$remplace'/g' $filename
-					/etc/init.d/fspms stop
-					/etc/init.d/fspms start
+										/etc/init.d/fspms stop
+										/etc/init.d/fspms start
                                 else
                                 echo "Cancel"
                                 fi
-                          fi
+                        fi
 						if [ "$modifpara" = "3" ]; then
                                 Rehostadmin=$(whiptail --title "Change port" --inputbox "Choose a new admin port " 10 60 $hostadmin2 3>&1 1>&2 2>&3)
                                 exits=$?
                                 if [ $exits = 0 ]; then
                                         remplace=$hostadmin"="'"'$Rehostadmin'"'
-                 			sed -i 's/'$hostadmincp'/'$remplace'/g' $filename
-					/etc/init.d/fspms stop
-					/etc/init.d/fspms start
+										sed -i 's/'$hostadmincp'/'$remplace'/g' $filename
+										/etc/init.d/fspms stop
+										/etc/init.d/fspms start
                                 else
                                 echo "Cancel"
                                 fi
 						fi
-				if [ "$modifpara" = "4" ]; then
+						if [ "$modifpara" = "4" ]; then
                                 Rehostrestrict=$(whiptail --title "Check port" --menu "Choose the port" 15 80 5 \
 						"False" " - You can connect with the remote console" \
 						"True" " - You can only use the local console" 3>&1 1>&2 2>&3)
                                 exits=$?
-                               		 if [ $exits = 0 ]; then
+                               	if [ $exits = 0 ]; then
 									if [ "$Rehostrestrict" = "False" ]; then
-                                        					remplace=$hostrestrict"="'"false"'
+                                        remplace=$hostrestrict"="'"false"'
 										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi	
 										
 									if [ "$Rehostrestrict" = "True" ]; then
-                                        					remplace=$hostrestrict"="'"true"'
-										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
+                                        	remplace=$hostrestrict"="'"true"'
+											sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi
-					/etc/init.d/fspms stop
-					/etc/init.d/fspms start
+											/etc/init.d/fspms stop
+											/etc/init.d/fspms start
                                 else
                                 echo "Cancel"
-                               		 fi
+                               	fi
 						fi
 						if [ "$modifpara" = "5" ]; then
                                 Rehostweb=$(whiptail --title "Change port" --inputbox "Choose a new web reporting port " 10 60 $hostweb2 3>&1 1>&2 2>&3)
                                 exits=$?
                                 if [ $exits = 0 ]; then
                                         remplace=$hostweb"="'"'$Rehostweb'"'
-                 			sed -i 's/'$hostwebcp'/'$remplace'/g' $filename
-					/etc/init.d/fspms stop
-					/etc/init.d/fspms start
+										sed -i 's/'$hostwebcp'/'$remplace'/g' $filename
+										/etc/init.d/fspms stop
+										/etc/init.d/fspms start
                                 else
                                 echo "Cancel"
                                 fi
@@ -290,9 +290,9 @@ if [ $exitstatus = 0 ]; then
                         fi
 
     fi
-    if [ "$OPTION" = "04" ]; then
+if [ "$OPTION" = "04" ]; then
         echo "======================================="
-        echo "========== CHECK SERVERS =============="
+        echo "========== CHECK SERVRS =============="
         echo "======================================="
         echo ""
     echo 'please wait'
@@ -350,9 +350,7 @@ if [ $exitstatus = 0 ]; then
 						else
                           echo "return"
                         fi
-						
-						
-	fi
+fi
  if [ "$OPTION" = "03" ]; then
         echo "======================================="
         echo "============ HOTFIX INSTALL ==========="
@@ -384,18 +382,15 @@ if [ $exitstatus = 0 ]; then
 		echo "12.40.81153" > /opt/f-secure/fspms/version.txt
 	   	#start service
 	   	/etc/init.d/fspms start
-       else
+	else
            whiptail --title "Hotfix" --msgbox "Hotfix not available for this version of Policy Manager Server" 8 78
-       fi
-      else
+	fi
+   else
       whiptail --title "Hotfix" --msgbox "Please install Policy Manager server first" 8 78
-      fi
-  fi
-  
-  
-  
-		
-  fi
+   fi
+fi
+
+
 else
 sleep 1
 exit 0
