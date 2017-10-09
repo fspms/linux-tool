@@ -72,7 +72,7 @@ exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
      
-
+echo "test"
 
 else
 sleep 1
