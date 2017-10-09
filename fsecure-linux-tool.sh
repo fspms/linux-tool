@@ -57,7 +57,7 @@ fi
 
 while [ "$menu" != 1 ]; do
 
-OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 15 70 9 \
+OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 15 80 10 \
 "01" "Install/Reinstall/Update" \
 "02" "Port Used" \
 "03" "Install HotFix" \
