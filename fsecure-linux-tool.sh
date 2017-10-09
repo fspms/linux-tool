@@ -193,9 +193,10 @@ if [ $exitstatus = 0 ]; then
 		fi
 
         if [ $NomProtocole = adminExtensionLocalhostRestricted ]; then
-        hostrestrict=$(echo $ligne|cut -d"=" -f2)
-        echo "Restreindre l'accès de la console en local uniquement : "$hostrestrict
-        hostrestrict=$(echo $ligne|cut -d'"' -f2)
+        hostrestrictcp=$ligne
+	hostrestrict=$NomProtocole
+        hostrestrict2=$(echo $ligne|cut -d'"' -f2)
+	echo "Local host restricted : "$hostrestrict
         fi
 		
         if [ $NomProtocole = webReportingPort ]; then
