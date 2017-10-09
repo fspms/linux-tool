@@ -68,7 +68,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "08" "Check and force database update" \
 "09" "FSDIAG" \
 "10" "Check services" 3>&1 1>&2 2>&3)
-clear
+#clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
@@ -251,7 +251,27 @@ if [ $exitstatus = 0 ]; then
                                 echo "Cancel"
                                 fi
 						fi
-				
+				if [ "$modifpara" = "4" ]; then
+                                Rehostrestrict=$(whiptail --title "Check port" --menu "Choose the port" 15 80 5 \
+												"False" "You can connect with the remote console" \
+												"True" "You can only use the local console" 3>&1 1>&2 2>&3)
+                                exits=$?
+                               		 if [ $exits = 0 ]; then
+									if [ "$Rehostrestrict" = "1" ]; then
+                                        					remplace=$hostrestrict"="'"False"'
+										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
+									fi	
+										
+									if [ "$Rehostrestrict" = "2" ]; then
+                                        					remplace=$hostrestrict"="'"True"'
+										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
+									fi
+					/etc/init.d/fspms stop
+					/etc/init.d/fspms start
+                                else
+                                echo "Cancel"
+                               		 fi
+						fi
 						if [ "$modifpara" = "5" ]; then
                                 Rehostweb=$(whiptail --title "Change port" --inputbox "Choose a new web reporting port " 10 60 $hostweb2 3>&1 1>&2 2>&3)
                                 exits=$?
