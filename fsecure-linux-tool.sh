@@ -254,16 +254,16 @@ if [ $exitstatus = 0 ]; then
 						fi
 				if [ "$modifpara" = "4" ]; then
                                 Rehostrestrict=$(whiptail --title "Check port" --menu "Choose the port" 15 80 5 \
-						"False" "You can connect with the remote console" \
-						"True" "You can only use the local console" 3>&1 1>&2 2>&3)
+						"False" " - You can connect with the remote console" \
+						"True" " - You can only use the local console" 3>&1 1>&2 2>&3)
                                 exits=$?
                                		 if [ $exits = 0 ]; then
-									if [ "$Rehostrestrict" = "1" ]; then
+									if [ "$Rehostrestrict" = "False" ]; then
                                         					remplace=$hostrestrict"="'"false"'
 										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi	
 										
-									if [ "$Rehostrestrict" = "2" ]; then
+									if [ "$Rehostrestrict" = "True" ]; then
                                         					remplace=$hostrestrict"="'"true"'
 										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi
