@@ -62,7 +62,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "02" "Port Used" \
 "03" "Install HotFix" \
 "04" "Check F-secure communication" \
-"5" "Database tool (backup, recover and maintenance)" \
+"5" "Database tool" \
 "6" "Reset admin password" \
 "7" "Check and force database update" \
 "8" "FSDIAG" \
@@ -402,12 +402,12 @@ fi
 
 
 if [ "$OPTION" = "5" ]; then
-databasemenu=$(whiptail --title "Database tool" --menu 15 80 5 \
-                        "1" "Backup Database" \
-                        "2" "Maintenance tool database" \
-                        "3" "Recover Database" 3>&1 1>&2 2>&3)
-                        exitdata=$?
-                        if [ $exitdata = 0 ]; then
+	databasemenu=$(whiptail --title "Database tool" --menu "" 15 80 5 \
+                 "1" "Backup Database" \
+                 "2" "Maintenance tool database" \
+                 "3" "Recover Database" 3>&1 1>&2 2>&3)
+                 exitdata=$?
+                 if [ $exitdata = 0 ]; then
 							if [ "$databasemenu" = "1" ]; then
 							/etc/init.d/fspms stop
 							NOW=$(date +"%m-%d-%Y-%T")
@@ -421,7 +421,7 @@ databasemenu=$(whiptail --title "Database tool" --menu 15 80 5 \
 							/etc/init.d/fspms start	
 							fi
 							
-						fi
+				 fi
 fi
 
 else
