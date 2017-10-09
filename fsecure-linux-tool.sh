@@ -452,12 +452,28 @@ if [ "$OPTION" = "5" ]; then
 							if [ $Destination = 0 ]; then
 							desti="/tmp"
 							else
-							desti=$(whiptail --title "Change dest dir" --inputbox "Destination folder (/var/opt/fsecure/: " 10 60 /var/opt/f-secure/ --nocancel 3>&1 1>&2 2>&3)
+							desti=$(whiptail --title "Change dest dir" --inputbox "Destination folder " 10 60 /tmp --nocancel 3>&1 1>&2 2>&3)
+							fi
+							
+							servicec=`echo ${DISTROS} | grep "4" | wc -l`
+							if [ $servicec = 0 ]; then
+								servicecl="0"
+							else
+								servicecl="1"
+								/etc/init.d/fspms stop
 							fi
 
 							commandline="/opt/f-secure/fspms/bin/fspms-db-recover"$Noalertcl$Noreportcl" -curDir="$currupted" "$desti
 
 							$commandline
+							
+							if [ $servicecl = 1 ]; then
+								servicecl="0"
+							/etc/init.d/fspms start
+							fi
+							
+							whiptail --title "Recover" --msgbox "Save the recover database in "$desti 8 78
+							
 							else
 							echo "Back"
 							fi	
