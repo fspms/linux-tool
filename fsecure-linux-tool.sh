@@ -210,9 +210,9 @@ if [ $exitstatus = 0 ]; then
                         modifpara=$(whiptail --title "Check port" --menu "Choose the port" 15 80 5 \
                         "1" "HTTP port: "$hostport2 \
                         "2" "HTTPS port : "$hosthttps2 \
-                        "3" "Admin port : "$hostadmin \
-                        "4" "Local host restricted : "$hostrestrict \
-                        "5" "Web Reporting port : "$hostweb 3>&1 1>&2 2>&3)
+                        "3" "Admin port : "$hostadmin2 \
+                        "4" "Local host restricted : "$hostrestrict2 \
+                        "5" "Web Reporting port : "$hostweb2 3>&1 1>&2 2>&3)
                         exitpara=$?
                         if [ $exitpara = 0 ]; then
                            if [ "$modifpara" = "1" ]; then
