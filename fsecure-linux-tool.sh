@@ -296,7 +296,7 @@ if [ $exitstatus = 0 ]; then
         echo "========== CHECK SERVERS =============="
         echo "======================================="
         echo ""
-    echo 'Merci de patientez'
+    echo 'please wait'
 
      xmlshavlik=$(host -W1 xml.shavlik.com)
      xmlshavlikf=$(echo $xmlshavlik |grep "NXDOMAIN\|timed out")
@@ -339,7 +339,7 @@ if [ $exitstatus = 0 ]; then
      echo  "Check f-secure.com = OK"
      fi
     fi
-						modifpara=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" 15 80 5 \
+						modifchk=$(whiptail --title "Check F-secure Servers" --menu "Choose the port" 15 80 5 \
                         "Software updater : "$swupchk \
                         "Updates servers : "$bddchk \
                         "ORSP : "$orspchk 3>&1 1>&2 2>&3)
