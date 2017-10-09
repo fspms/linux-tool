@@ -62,7 +62,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "02" "Port Used" \
 "03" "Install HotFix" \
 "04" "Check F-secure communication" \
-"5" "Database tool (backup, recover and maintenance)"\
+"5" "Database tool (backup, recover and maintenance)" \
 "6" "Reset admin password" \
 "7" "Check and force database update" \
 "8" "FSDIAG" \
