@@ -391,70 +391,10 @@ if [ $exitstatus = 0 ]; then
       whiptail --title "Hotfix" --msgbox "Please install Policy Manager server first" 8 78
       fi
   fi
+  
   if [ "$OPTION" = "5" ]; then
-  databasemenu=$(whiptail --title "Database tool" --menu 15 80 5 \
-                        "1" "Backup Database" \
-                        "2" "Maintenance tool database" \
-                        "3" "Recover Database" 3>&1 1>&2 2>&3)
-                        exitdata=$?
-                        if [ $exitdata = 0 ]; then
-							if [ "$databasemenu" = "1" ]; then
-							/etc/init.d/fspms stop
-							NOW=$(date +"%m-%d-%Y-%T")
-							cp /var/opt/f-secure/fspms/data/h2db/fspms.h2.db /var/opt/f-secure/fspms/data/backup/fspms.$NOW.h2.db
-							/etc/init.d/fspms start
-							whiptail --title "Backup" --msgbox "The backup file is in /var/opt/f-secure/fspms/data/backup/" 8 78
-							fi
-							if [ "$databasemenu" = "2" ]; then
-							/etc/init.d/fspms stop
-							/opt/f-secure/fspms/bin/fspms-db-maintenance-tool
-							/etc/init.d/fspms start	
-							fi
-							if [ "$databasemenu" = "3" ]; then
-							DISTROS=$(whiptail --title "Database recover" --checklist \
-									"Choose options for recover tool" 15 60 4 \
-									"1" "Without scanning Alerts" OFF \
-									"2" "Without scanning Repport" OFF \
-									"3" "Change destination folder /var/opt/" ON \
-									"4" "Stop fspms service before recover database" OFF 3>&1 1>&2 2>&3)
-
-							exitstatus=$?
-							if [ $exitstatus = 0 ]; then
-
-							Noalert=`echo ${DISTROS} | grep "1" | wc -l`
-							if [ $Noalert = 0 ]; then
-								Noalertcl=""
-							else
-								Noalertcl=" -noAlerts"
-							fi
-
-							Noreport=`echo ${DISTROS} | grep "2" | wc -l`
-							if [ $Noreport = 0 ]; then
-								Noreportcl=""
-							else
-								Noreportcl=" -noReports"
-							fi
-
-							currupted=$(whiptail --title "Currupted database" --inputbox "Corrupted database d " 10 60 /var/opt/f-secure/fspms/data/h2db --nocancel 3>&1 1>&2 2>&3)
-
-
-							Destination=`echo ${DISTROS} | grep "3" | wc -l`
-							if [ $Destination = 0 ]; then
-							desti="/tmp"
-							else
-							desti=$(whiptail --title "Change dest dir" --inputbox "Destination folder (/var/opt/fsecure/: " 10 60 /var/opt/f-secure/ --nocancel 3>&1 1>&2 2>&3)
-							fi
-
-							commandline="fspms-db-recover"$Noalertcl$Noreportcl" -curDir="$currupted" "$desti
-
-							echo $commandline
-							else
-							echo "You chose Cancel."
-							fi	
-
-							fi
-						fi
-			fi
+  
+		
   fi
 else
 sleep 1
