@@ -457,9 +457,9 @@ if [ "$OPTION" = "5" ]; then
 
 							commandline="fspms-db-recover"$Noalertcl$Noreportcl" -curDir="$currupted" "$desti
 
-							echo $commandline
+							$commandline
 							else
-							echo "You chose Cancel."
+							echo "Back"
 							fi	
 
 							fi
