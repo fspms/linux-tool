@@ -72,7 +72,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
-     if [ "$OPTION" = "1" ]; then
+     if [ "$OPTION" = "01" ]; then
        # distri=$(lsb_release -is)
 	
 	filename="/etc/os-release"
@@ -160,7 +160,7 @@ if [ $exitstatus = 0 ]; then
         echo "Unsupported Operating System";
         fi
     fi
-    if [ "$OPTION" = "2" ]; then
+    if [ "$OPTION" = "02" ]; then
         echo "======================================="
         echo "====== PORTS F-SECURE FSPMS ==========="
         echo "======================================="
@@ -253,17 +253,17 @@ if [ $exitstatus = 0 ]; then
 						fi
 				if [ "$modifpara" = "4" ]; then
                                 Rehostrestrict=$(whiptail --title "Check port" --menu "Choose the port" 15 80 5 \
-												"False" "You can connect with the remote console" \
-												"True" "You can only use the local console" 3>&1 1>&2 2>&3)
+						"False" "You can connect with the remote console" \
+						"True" "You can only use the local console" 3>&1 1>&2 2>&3)
                                 exits=$?
                                		 if [ $exits = 0 ]; then
 									if [ "$Rehostrestrict" = "1" ]; then
-                                        					remplace=$hostrestrict"="'"False"'
+                                        					remplace=$hostrestrict"="'"false"'
 										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi	
 										
 									if [ "$Rehostrestrict" = "2" ]; then
-                                        					remplace=$hostrestrict"="'"True"'
+                                        					remplace=$hostrestrict"="'"true"'
 										sed -i 's/'$hostrestrictcp'/'$remplace'/g' $filename
 									fi
 					/etc/init.d/fspms stop
