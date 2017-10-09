@@ -452,8 +452,9 @@ if [ $exitstatus = 0 ]; then
 							echo "You chose Cancel."
 							fi	
 
+							fi
 						fi
-				fi
+			fi
   fi
 else
 sleep 1
