@@ -455,7 +455,7 @@ if [ "$OPTION" = "5" ]; then
 							desti=$(whiptail --title "Change dest dir" --inputbox "Destination folder (/var/opt/fsecure/: " 10 60 /var/opt/f-secure/ --nocancel 3>&1 1>&2 2>&3)
 							fi
 
-							commandline="fspms-db-recover"$Noalertcl$Noreportcl" -curDir="$currupted" "$desti
+							commandline="/opt/f-secure/fspms/bin/fspms-db-recover"$Noalertcl$Noreportcl" -curDir="$currupted" "$desti
 
 							$commandline
 							else
