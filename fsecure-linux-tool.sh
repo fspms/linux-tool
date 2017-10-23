@@ -32,13 +32,12 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 ##
 if [ ${#configfile} -gt "1" ]
 then
-   cd $DIR
-   autoupdate=$(git diff)
+   
+   autoupdate=$(cd $DIR && git diff master)
    pid=${$}
 
    ##check update on github##
-   cd $DIR
-   gitpull=$(git pull)
+   gitpull=$(cd $DIR && git pull)
    if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
      then
       whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
@@ -51,8 +50,8 @@ then
       echo "Up to date"
      else
       whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
-	  cd $DIR
-      git reset --hard origin/master
+	  
+      cd $DIR && git reset --hard origin/master
       whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
       kill $pid
    fi
