@@ -16,6 +16,7 @@ vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 
+
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
 # Only root can use this script
@@ -29,7 +30,7 @@ fi
 #DIR="$( cd "$( dirname "$0" )" && pwd )"
 DIR="/opt/fspms"
 configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
-
+##
 if [ ${#configfile} -gt "1" ]
 then
    cd $DIR
