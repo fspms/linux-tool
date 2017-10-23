@@ -34,11 +34,12 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 
 if [ ${#configfile} -gt "1" ]
 then
-
+   cd $DIR
    autoupdate=$(git diff)
    pid=${$}
 
    ##check update on github##
+   cd $DIR
    gitpull=$(git pull)
    if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
      then
