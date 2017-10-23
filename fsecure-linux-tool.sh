@@ -35,7 +35,10 @@ then
    
    autoupdate=$(cd $DIR && git diff)
    pid=${$}
-	#git --work-tree=$DIR --git-dir=$DIR/.git pull origin master
+	
+	testr=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
+	echo $testr
+   
    ##check update on github##
    gitpull=$(cd $DIR && git pull)
    if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
