@@ -25,7 +25,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 ##auto update## 
-
+#
 #DIR="$( cd "$( dirname "$0" )" && pwd )"
 DIR="/opt/fspms"
 configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
