@@ -36,14 +36,18 @@ then
    autoupdate=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git diff)
    pid=${$}
 	
+   testr=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git pull origin master)
+   testrr=$(testr |grep "Already up-to-date")
+   echo $testrr
+   
    
    ##check update on github##
-  ## gitpull=$(cd $DIR && git pull)
-  ## if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
- ##    then
-  ##    whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
-  ##    kill $pid
- ##    fi
+  gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
+   if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
+     then
+      whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
+      kill $pid
+     fi
 
    #check if the script has different (local edit)
    if [ -z "$autoupdate" ]
