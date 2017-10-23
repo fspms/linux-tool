@@ -34,7 +34,7 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 if [ ${#configfile} -gt "1" ]
 then
    cd $DIR
-  # autoupdate=$(git diff)
+   autoupdate=$(git diff)
    pid=${$}
 
    ##check update on github##
@@ -47,16 +47,16 @@ then
      fi
 
    #check if the script has different (local edit)
- #  if [ -z "$autoupdate" ]
- #    then
- #     echo "Up to date"
- #    else
+   if [ -z "$autoupdate" ]
+     then
+      echo "Up to date"
+     else
       whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
 	  cd $DIR
       git reset --hard origin/master
       whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
       kill $pid
- #  fi
+   fi
 else
     whiptail --title "Update" --msgbox "You can use this script without Github but updates are disable" 8 78
 fi
