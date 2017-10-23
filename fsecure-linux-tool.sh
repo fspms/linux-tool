@@ -25,7 +25,7 @@ fi
 ##auto update## 
 
 #DIR="$( cd "$( dirname "$0" )" && pwd )"
-DIR=/home/fsecure/linux-tool
+DIR=/opt/fspms
 configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 
 if [ ${#configfile} -gt "1" ]
