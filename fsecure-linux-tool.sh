@@ -40,7 +40,7 @@ then
 	#echo $testr
    
    ##check update on github##
-   gitpull=$(git pull)
+   gitpull=$(cd $DIR && git pull)
    if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
      then
       whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
@@ -54,7 +54,7 @@ then
      else
       whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
 	  
-      git reset --hard origin/master
+      cd $DIR && git reset --hard origin/master
       whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
       kill $pid
    fi
