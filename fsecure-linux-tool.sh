@@ -36,9 +36,9 @@ then
    autoupdate=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git diff)
    pid=${$}
 	
-   testr=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git pull origin master)
-   testrr=$(testr |grep "Already up-to-date")
-   echo $testrr
+   #testr=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git pull origin master)
+   #testrr=$(testr |grep "Already up-to-date")
+   #echo $testrr
    
    
    ##check update on github##
