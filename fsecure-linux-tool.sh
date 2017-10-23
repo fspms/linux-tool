@@ -10,9 +10,13 @@ rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/current/fspmaua-9.
 rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-12.40.81151-1.x86_64.rpm"
 
 vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
+vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
 vrpmfspmaua=$(echo $rpmlinkfspmaua|cut -d"/" -f7)
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 
+lastversion=$(echo $vdebfspms|cut -d"_" -f2)
+
+echo $lastversion
 
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
@@ -38,7 +42,7 @@ then
    gitpull=$(git pull)
    if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
      then
-      whiptail --title "Example Dialog" --msgbox "The script was updated succefully" 8 78
+      whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
       kill $pid
      fi
 
@@ -49,7 +53,7 @@ then
      else
       whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
       git reset --hard origin/master
-      whiptail --title "Update" --msgbox "Mise à jour terminé, le script va s'arrêter" 8 78
+      whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
       kill $pid
    fi
 else
@@ -59,10 +63,10 @@ fi
 while [ "$menu" != 1 ]; do
 
 OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 30 70 10 \
-"01" "Install/Reinstall/Update" \
-"02" "Port Used" \
-"03" "Install HotFix" \
-"04" "Check F-secure communication" \
+"1" "Install / Update" \
+"2" "Port Used" \
+"3" "Install HotFix" \
+"4" "Check F-secure communication" \
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "Check and force database update" \
@@ -73,9 +77,9 @@ exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
      
-if [ "$OPTION" = "01" ]; then
+if [ "$OPTION" = "1" ]; then
        # distri=$(lsb_release -is)
-	
+	   
 	filename="/etc/os-release"
         while read -r ligne
         do
@@ -140,7 +144,7 @@ if [ "$OPTION" = "01" ]; then
            #check service fspms
            #check bdd
            if [ -e /var/opt/f-secure/fspms/data/h2db/fspms.h2.db ]; then
-	   reup=1
+			reup=1
            /etc/init.d/fspms stop
 	   NOW=$(date +"%m-%d-%Y-%T")
 	   cp /var/opt/f-secure/fspms/data/h2db/fspms.h2.db /var/opt/f-secure/fspms/data/backup/fspms.$NOW.h2.db
@@ -149,8 +153,8 @@ if [ "$OPTION" = "01" ]; then
 	   reup=0
            fi
            #install
-           dpkg -i /tmp/$vrpmfspmaua
-           dpkg -i /tmp/$vrpmfspms
+           dpkg -i /tmp/$vdebfspmaua
+		   dpkg -i /tmp/$vdebfspms
            #suppression des paquets
            rm /tmp/fspm*  
 	   if [ "$reup" = 1 ]; then
@@ -168,7 +172,7 @@ if [ "$OPTION" = "01" ]; then
 
 
 
-if [ "$OPTION" = "02" ]; then
+if [ "$OPTION" = "2" ]; then
         echo "======================================="
         echo "====== PORTS F-SECURE FSPMS ==========="
         echo "======================================="
@@ -299,7 +303,7 @@ if [ "$OPTION" = "02" ]; then
                         fi
 
     fi
-if [ "$OPTION" = "04" ]; then
+if [ "$OPTION" = "4" ]; then
         echo "======================================="
         echo "========== CHECK SERVRS =============="
         echo "======================================="
@@ -364,7 +368,7 @@ fi
 
 
 
-if [ "$OPTION" = "03" ]; then
+if [ "$OPTION" = "3" ]; then
         echo "======================================="
         echo "============ HOTFIX INSTALL ==========="
         echo "======================================="
@@ -391,8 +395,10 @@ if [ "$OPTION" = "03" ]; then
 	    	#delete zip and unzip folder
 	   	rm -f /tmp/fspm*.zip
 	   	rm -rf /tmp/fspm*
+		
 		#add new version information
-		echo "12.40.81153" > /opt/f-secure/fspms/version.txt
+		#echo "12.40.81153" > /opt/f-secure/fspms/version.txt
+		
 	   	#start service
 	   	/etc/init.d/fspms start
 	else
