@@ -24,7 +24,8 @@ fi
 
 ##auto update## 
 
-DIR="$( cd "$( dirname "$0" )" && pwd )"
+#DIR="$( cd "$( dirname "$0" )" && pwd )"
+DIR=/home/fsecure/linux-tool
 configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 
 if [ ${#configfile} -gt "1" ]
@@ -118,6 +119,8 @@ if [ "$OPTION" = "01" ]; then
 		/etc/init.d/fspms start
 		/opt/f-secure/fspms/bin/fspms-config
 		
+		#check SE LINUX
+		
         elif [ "$distri" = "Fedora" ]
         then
         echo "Fedora";
@@ -146,8 +149,8 @@ if [ "$OPTION" = "01" ]; then
 	   reup=0
            fi
            #install
-           dpkg -i /tmp/fspmaua_*
-           dpkg -i /tmp/fspms_*
+           dpkg -i /tmp/$vrpmfspmaua
+           dpkg -i /tmp/$vrpmfspms
            #suppression des paquets
            rm /tmp/fspm*  
 	   if [ "$reup" = 1 ]; then
