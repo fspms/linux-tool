@@ -15,3 +15,9 @@ This script allows :
  - Create a FSDIAG package for support
  - Check services on Linux
  
+INSTALLATION
+
+Download setup.sh and execute it
+wget https://github.com/fspms/linux-tool/setup.sh && setup.sh
+
+If install is complete you can execute linux-tool when type "fspms"
