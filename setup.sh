@@ -24,7 +24,7 @@ filename="/etc/os-release"
 				yum install git -y
 				git clone https://github.com/fspms/linux-tool /opt/fspms
 				rm /sbin/fspms
-				ln  /opt/fspms/fsecure-linux-tool.sh /sbin/fspms
+				ln -s /opt/fspms/fsecure-linux-tool.sh /sbin/fspms
 				chmod +x /sbin/fspms
 		
 		
@@ -39,7 +39,7 @@ filename="/etc/os-release"
 				apt-get install git -y
 				git clone https://github.com/fspms/linux-tool /opt/fspms
 				rm /sbin/fspms
-				ln  /opt/fspms/fsecure-linux-tool.sh /sbin/fspms
+				ln -s /opt/fspms/fsecure-linux-tool.sh /sbin/fspms
 				chmod +x /sbin/fspms
         fi  
 		
