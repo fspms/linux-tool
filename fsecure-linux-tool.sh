@@ -38,12 +38,12 @@ then
 	
    
    ##check update on github##
-   gitpull=$(cd $DIR && git pull)
-   if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
-     then
-      whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
-      kill $pid
-     fi
+  ## gitpull=$(cd $DIR && git pull)
+  ## if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
+ ##    then
+  ##    whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
+  ##    kill $pid
+ ##    fi
 
    #check if the script has different (local edit)
    if [ -z "$autoupdate" ]
