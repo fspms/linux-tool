@@ -33,7 +33,7 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 if [ ${#configfile} -gt "1" ]
 then
    
-   autoupdate=$(cd $DIR && git diff)
+   autoupdate=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git diff)
    pid=${$}
 	
 	testr=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
