@@ -16,7 +16,6 @@ vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 
-
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
 # Only root can use this script
