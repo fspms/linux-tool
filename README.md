@@ -21,7 +21,7 @@ This script allows :
 Download setup.sh and execute it
 
 ```
-wget https://raw.githubusercontent.com/fspms/linux-tool/master/setup.sh && setup.sh
+wget https://raw.githubusercontent.com/fspms/linux-tool/master/setup.sh && sh setup.sh
 ```
 
 If install is complete you can execute linux-tool when type "fspms"
