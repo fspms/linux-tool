@@ -5,9 +5,9 @@ hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-lin
 
 #FSPMS DEB / RPM
 deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/current/fspmaua_9.01.3_amd64.deb"
-deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_12.40.81151_amd64.deb"
+deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.00.83039_amd64.deb"
 rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/current/fspmaua-9.01.3-1.x86_64.rpm"
-rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-12.40.81151-1.x86_64.rpm"
+rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.00.83039-1.x86_64.rpm"
 
 vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
@@ -30,8 +30,8 @@ fi
 DIR="/opt/fspms"
 configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
 
-if [ ${#configfile} -gt "1" ]
-then
+#if [ ${#configfile} -gt "1" ]
+#then
    
    autoupdate=$(git --work-tree=/opt/fspms/ --git-dir=/opt/fspms/.git diff)
    pid=${$}
@@ -42,27 +42,27 @@ then
    
    
    ##check update on github##
-  gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
-   if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
-     then
-      whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
-      kill $pid
-     fi
+  #gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
+  # if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
+  #   then
+  #    whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
+   #   kill $pid
+  ##   fi
 
    #check if the script has different (local edit)
-   if [ -z "$autoupdate" ]
-     then
-      echo "Up to date"
-     else
-      whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
+  # if [ -z "$autoupdate" ]
+  #   then
+  #    echo "Up to date"
+  #   else
+  #    whiptail --title "Update" --msgbox "Update available, OK to start" 8 78
 	  
-      cd $DIR && git reset --hard origin/master
-      whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
-      kill $pid
-   fi
-else
-    whiptail --title "Update" --msgbox "You can use this script without Github but updates are disable" 8 78
-fi
+  #    cd $DIR && git reset --hard origin/master
+   #   whiptail --title "Update" --msgbox "Update successfull, the script will stop" 8 78
+   #   kill $pid
+  # fi
+#else
+#    whiptail --title "Update" --msgbox "You can use this script without Github but updates are disable" 8 78
+#fi
 
 while [ "$menu" != 1 ]; do
 
