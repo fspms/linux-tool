@@ -165,6 +165,7 @@ if [ "$OPTION" = "1" ]; then
 	   /etc/init.d/fspms stop
 	   /opt/f-secure/fspms/bin/fspms-db-maintenance-tool
 	   fi
+	   chmod +x /etc/init.d/fspms
 	   /etc/init.d/fspms start
 	   /opt/f-secure/fspms/bin/fspms-config
         else
