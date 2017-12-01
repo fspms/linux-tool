@@ -48,6 +48,19 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
   #    whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
    #   kill $pid
   ##   fi
+  
+  
+   gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
+flag=`echo $gitpull|awk '{print match($0,"fsecure-linux-tool.sh")}'`;
+if [ $flag -gt 0 ]; then
+        whiptail --title "Auto Update" --msgbox "The script was updated successfully" 8 78
+        kill $pid;
+else
+    echo "fail";
+
+fi
+
+  
 
    #check if the script has different (local edit)
   # if [ -z "$autoupdate" ]
