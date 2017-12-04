@@ -519,7 +519,7 @@ fi
 if [ "$OPTION" = "8" ]; then
 desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destination folder " 10 60 /opt/f-secure/fspms/bin/ --nocancel 3>&1 1>&2 2>&3)
 /opt/f-secure/fspms/bin/fsdiag
-	if [ $desti = "/opt/f-secure/fspms/bin/"], then
+	if [ $desti = "/opt/f-secure/fspms/bin/" ]; then
 	    echo "ok"
 	else
 	mv /opt/f-secure/fspms/bin/fsdiag.tar.gz $desti
