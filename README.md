@@ -4,7 +4,7 @@
 
 This script allows :
 
- - Automate Policy Manager server install on Linux (Debian, Ubuntu and CentOS atm)
+ - Automatic installation of Policy Manager server on Linux (Debian, Ubuntu and CentOS atm)
  - Install HotFix
  - Check and modify the ports used
  - Check communication with F-Secure servers
