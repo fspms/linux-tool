@@ -350,7 +350,7 @@ if [ "$OPTION" = "2" ]; then
 						fi
 						
                         else
-                          echo "vous avez annulé"
+                          echo "Cancel"
                         fi
 
     fi
