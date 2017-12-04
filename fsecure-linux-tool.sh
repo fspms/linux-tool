@@ -510,6 +510,24 @@ if [ "$OPTION" = "5" ]; then
 				 fi
 fi
 
+if [ "$OPTION" = "5" ]; then
+	/etc/init.d/fspms stop
+	/opt/f-secure/fspms/bin/fspms-reset-admin-account
+	/etc/ini.d/fspms start
+fi
+
+if [ "$OPTION" = "8" ]; then
+desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destination folder " 10 60 /opt/f-secure/fspms/bin/ --nocancel 3>&1 1>&2 2>&3)
+/opt/f-secure/fspms/bin/fsdiag
+	if [ $desti = "/opt/f-secure/fspms/bin/"], then
+	    echo "ok"
+	else
+	mv /opt/f-secure/fspms/bin/fsdiag.tar.gz $desti
+	fi
+fi
+
+
+
 else
 sleep 1
 exit 0
