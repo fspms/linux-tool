@@ -1,5 +1,5 @@
 # F-Secure linux-tool
- Script to automate the management of F-Secure Policy Manager for linux
+ Script to automated the management of F-Secure Policy Manager for linux
 
 
 This script allows :
