@@ -4,15 +4,26 @@
 hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-linux-hotfix-1.zip"
 
 #FSPMS DEB / RPM
-deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/current/fspmaua_9.01.3_amd64.deb"
-deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.01.83074_amd64.deb"
-rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/current/fspmaua-9.01.3-1.x86_64.rpm"
-rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.01.83074-1.x86_64.rpm"
+deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua_9.01.3_amd64.deb"
+deblinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms_12.40.81151_amd64.deb"
+
+deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.01.83074_amd64.deb"
+
+rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua-9.01.3-1.x86_64.rpm"
+rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms-12.40.81151-1.x86_64.rpm"
+
+
+rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.01.83074-1.x86_64.rpm"
 
 vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
+vdebfspms13=$(echo $deblinkfspms13|cut -d"/" -f7)
 vrpmfspmaua=$(echo $rpmlinkfspmaua|cut -d"/" -f7)
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
+vrpmfspms13=$(echo $rpmlinkfspms13|cut -d"/" -f7)
+
+
+
 
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 
@@ -42,25 +53,18 @@ configfile=$(cat $DIR/.git/config | grep "https://github.com/fspms/linux-tool")
    
    
    ##check update on github##
-  #gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
-  # if [ "$gitpull" != "Already up-to-date." ] && [ ${#gitpull} != 0 ]
-  #   then
-  #    whiptail --title "Example Dialog" --msgbox "The script was updated successfully" 8 78
-   #   kill $pid
-  ##   fi
-  
-  
-   gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
+gitpull=$(git --work-tree=$DIR --git-dir=$DIR/.git pull origin master)
 flag=`echo $gitpull|awk '{print match($0,"fsecure-linux-tool.sh")}'`;
 if [ $flag -gt 0 ]; then
         whiptail --title "Auto Update" --msgbox "The script was updated successfully" 8 78
         kill $pid;
 else
     echo "fail";
-
 fi
 
-  
+ ##Reset local change
+ 
+#git reset --hard origin/master
 
    #check if the script has different (local edit)
   # if [ -z "$autoupdate" ]
@@ -95,7 +99,13 @@ if [ $exitstatus = 0 ]; then
 
      
 if [ "$OPTION" = "1" ]; then
-       # distri=$(lsb_release -is)
+       
+	   chooseVersion=$(whiptail --title "Choose version" --menu "Choose version of Policy Manager" 15 80 5 \
+                        "1" "Policy Manager 13.01" \
+                        "2" "Policy Manager 12.40 with AUA"$hostweb2 3>&1 1>&2 2>&3)
+                        #exitpara=$?
+                        #if [ $exitpara = 0 ]; then
+	   
 	   
 	filename="/etc/os-release"
         while read -r ligne
@@ -116,8 +126,13 @@ if [ "$OPTION" = "1" ]; then
 		yum install net-tools -y
 		cd /tmp/
            	rm -f /tmp/fspm*
-           	wget -t 5 $rpmlinkfspmaua
-           	wget -t 5 $rpmlinkfspms
+				if [ $chooseVersion = "1" ]; then
+					wget -t 5 $rpmlinkfspms13
+				fi
+				if [ $chooseVersion = "2" ]; then
+					wget -t 5 $rpmlinkfspmaua
+					wget -t 5 $rpmlinkfspms
+				fi
               	#check bdd
            	if [ -e /var/opt/f-secure/fspms/data/h2db/fspms.h2.db ]; then
 		reup=1
@@ -129,8 +144,15 @@ if [ "$OPTION" = "1" ]; then
 		reup=0
            	fi
            	#install
-           	rpm -i /tmp/$vrpmfspmaua
-           	rpm -i /tmp/$vrpmfspms
+			
+			if [ $chooseVersion = "1" ]; then
+                rpm -i /tmp/$vrpmfspms13
+			fi
+			if [ $chooseVersion = "2" ]; then
+				rpm -i /tmp/$vrpmfspmaua
+                rpm -i /tmp/$vrpmfspms
+			fi
+			
            	#suppression des paquets
            	rm -f /tmp/fspm*  
 		if [ "$reup" = 1 ]; then
@@ -156,8 +178,13 @@ if [ "$OPTION" = "1" ]; then
            apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386
            cd /tmp/
 	   rm -f /tmp/fspm*
-           wget -t 5 $deblinkfspmaua
-           wget -t 5 $deblinkfspms
+			if [ $chooseVersion = "1" ]; then
+					wget -t 5 $deblinkfspms13
+				fi
+				if [ $chooseVersion = "2" ]; then
+					wget -t 5 $deblinkfspmaua
+					wget -t 5 $deblinkfspms
+				fi
            #check service fspms
            #check bdd
            if [ -e /var/opt/f-secure/fspms/data/h2db/fspms.h2.db ]; then
@@ -170,8 +197,14 @@ if [ "$OPTION" = "1" ]; then
 	   reup=0
            fi
            #install
-           dpkg -i /tmp/$vdebfspmaua
-		   dpkg -i /tmp/$vdebfspms
+		   if [ $chooseVersion = "1" ]; then
+					dpkg -i /tmp/$vdebfspms13
+				fi
+				if [ $chooseVersion = "2" ]; then
+					dpkg -i /tmp/$vdebfspmaua
+					dpkg -i /tmp/$vdebfspms
+				fi
+
            #suppression des paquets
            rm /tmp/fspm*  
 	   if [ "$reup" = 1 ]; then
