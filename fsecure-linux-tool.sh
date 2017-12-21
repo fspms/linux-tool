@@ -7,13 +7,13 @@ hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-lin
 deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua_9.01.3_amd64.deb"
 deblinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms_12.40.81151_amd64.deb"
 
-deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.01.83074_amd64.deb"
+deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.10.84021_amd64.deb"
 
 rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua-9.01.3-1.x86_64.rpm"
 rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms-12.40.81151-1.x86_64.rpm"
 
 
-rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.01.83074-1.x86_64.rpm"
+rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.10.84021-1.x86_64.rpm"
 
 vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
