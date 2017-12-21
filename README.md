@@ -25,3 +25,12 @@ wget https://raw.githubusercontent.com/fspms/linux-tool/master/setup.sh && sh se
 ```
 
 If install is complete you can execute linux-tool when type "fspms"
+
+
+
+
+#### Roadmap
+
+- Add Policy Manager Proxy Setup and Config
+- Add Linux Security Setup
+- Add IGK Setup and automatique configuration 
