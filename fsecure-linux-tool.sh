@@ -543,7 +543,7 @@ if [ "$OPTION" = "5" ]; then
 				 fi
 fi
 
-if [ "$OPTION" = "5" ]; then
+if [ "$OPTION" = "6" ]; then
 	/etc/init.d/fspms stop
 	/opt/f-secure/fspms/bin/fspms-reset-admin-account
 	/etc/ini.d/fspms start
