@@ -90,9 +90,8 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "4" "Check F-secure communication" \
 "5" "Database tool" \
 "6" "Reset admin password" \
-"7" "Check and force database update" \
-"8" "FSDIAG" \
-"9" "Check services" 3>&1 1>&2 2>&3)
+"7" "FSDIAG" \
+"8" "Check services" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -549,7 +548,7 @@ if [ "$OPTION" = "6" ]; then
 	/etc/ini.d/fspms start
 fi
 
-if [ "$OPTION" = "8" ]; then
+if [ "$OPTION" = "7" ]; then
 desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destination folder " 10 60 /opt/f-secure/fspms/bin/ --nocancel 3>&1 1>&2 2>&3)
 /opt/f-secure/fspms/bin/fsdiag
 	if [ $desti = "/opt/f-secure/fspms/bin/" ]; then
