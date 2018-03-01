@@ -573,7 +573,7 @@ if [ "$OPTION" = "8" ]; then
 						"3" "Normal - download on internet" \
 						"4" "Chaining" - download on another PMP 3>&1 1>&2 2>&3)
                         exitpara=$?
-                        if [ $exitpara = 0 ]; then
+   if [ $exitpara = 0 ]; then
 	   
 	   
 	filename="/etc/os-release"
@@ -763,18 +763,15 @@ if [ "$OPTION" = "8" ]; then
 					
 					/opt/f-secure/fspms/bin/fspms-config
 					
-					/etc/init.d/fspms start
-				
+					/etc/init.d/fspms start						
 	   fi
 	   
 
 	   
-        else
-        echo "Unsupported Operating System";
-        fi
+       
     fi
 
-
+fi
 
 else
 sleep 1
