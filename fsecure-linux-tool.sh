@@ -23,6 +23,12 @@ vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 vrpmfspms13=$(echo $rpmlinkfspms13|cut -d"/" -f7)
 
 
+#FSPMP DEB/RPM
+
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_13.10.84021_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-13.10.84021-1.x86_64.rpm"
+vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
+vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
 
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
@@ -91,7 +97,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Check services" 3>&1 1>&2 2>&3)
+"8" "Install PM Proxy" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -557,6 +563,220 @@ desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destinat
 	mv /opt/f-secure/fspms/bin/fsdiag.tar.gz $desti
 	fi
 fi
+
+
+if [ "$OPTION" = "8" ]; then
+       
+	   chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
+                        "1" "Autonome - without PM Server" \
+                        "2" "Reverse - download on PM Server" \
+						"3" "Normal - download on internet" \
+						"4" "Chaining" - download on another PMP 3>&1 1>&2 2>&3)
+                        #exitpara=$?
+                        #if [ $exitpara = 0 ]; then
+	   
+	   
+	filename="/etc/os-release"
+        while read -r ligne
+        do
+        catname=$(echo $ligne|cut -d"=" -f1)
+        if [ "$catname" = "ID" ]; then
+	distri=$(echo $ligne|cut -d"=" -f2)
+	fi
+	done < "$filename"
+	
+
+        if [ "$distri" = "centos" ] || [ "$distri" = '"centos"' ]
+        then
+        echo "centoS";
+		yum update
+		yum install libstd++.i686 -y
+		yum install wget -y
+		yum install net-tools -y
+		cd /tmp/
+           	rm -f /tmp/fspmp*
+					wget -t 5 $rpmlinkpmp
+				
+           	
+           	#install
+			
+				rpm -i /tmp/$vrpmpmp
+			
+           	#suppression des paquets
+           	rm -f /tmp/$vrpmpmp
+			
+
+		/etc/init.d/fspms start
+		/opt/f-secure/fspms/bin/fspms-config
+		
+		#check SE LINUX
+		
+        elif [ "$distri" = "Fedora" ]
+        then
+        echo "Fedora";
+		
+        # Do that
+        elif [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+        then
+        echo "Debian or Ubuntu";
+
+           apt-get update
+           dpkg --add-architecture i386
+           apt-get update
+           apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386
+           cd /tmp/
+		   rm -f /tmp/fspmp*
+					wget -t 5 $deblinkpmp
+	
+           #install
+					dpkg -i /tmp/$vdebpmp
+
+           #suppression des paquets
+           rm /tmp/$vdebpmp  
+		   
+	   chmod +x /etc/init.d/fspms
+	   
+	   
+	   dpkg -i /tmp/$vdebfspms13
+	   
+	   filebinfsconf="/opt/f-secure/fspms/bin/fspms-config"
+	   
+	   if [ $chooseVersion = "1" ]; then
+					whiptail --title "Mode autonome" --msgbox "To install the autnome mode you have to insert 0.0.0.0 on Server address to the next question" 15 60 5				
+	   fi
+	   
+	   if [ $chooseVersion = "2" ]; then
+					pmsip=$(whiptail --title "Mode reverse" --inputbox "To install reverse mode PMP, need to download admin.pub on Policy Manager Server. Please insert the Policy Manager Server IP Address " 10 60 3>&1 1>&2 2>&3)
+					wget --no-check-certificate -O /var/opt/f-secure/fspms/data/admin.pub https://$pmsip/fsms/fsmsh.dll?FSMSCommand=GetPublicKey
+				if [ $? -eq 0 ]
+				then
+					pmsipqu='"'$pmsip'"'
+					# Check if custom upsteam exist
+					#checkline=$(grep -n "upstreamPmHost=$pmsipqu" $filebinfsconf | cut -d: -f 1)
+					#if [ ${#checkline} -gt 1 ]
+					#then 
+					#sed -i "/upstreamPmHost=$pmsipqu/d" $filebinfsconf
+					#fi
+					#linesa=$(grep -n 'ask_input "Server address"' $filebinfsconf | cut -d: -f 1)
+					#sed -i "$linesa i upstreamPmHost=$pmsipqu" $filebinfsconf
+					
+					#add argument reverse + server add
+					
+					
+					filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
+					while read -r ligne
+					do
+					NomProtocole=$(echo $ligne|cut -d"=" -f1)
+					
+					if [ $NomProtocole = additional_java_args ]; then
+					addjavaarg=$ligne
+					remplace='additional_java_args="-DreverseProxy=true"'
+					sed -i 's/'$addjavaarg'/'$remplace'/g' $filefspmsconf
+					fi
+					
+					if [ $NomProtocole = upstreamPmHost ]; then
+					uppmhost=$ligne
+					remplace="upstreamPmHost=$pmsipqu"
+					sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
+					fi
+					
+					
+					done < "$filefspmsconf"
+					
+					
+					/opt/f-secure/fspms/bin/fspms-config
+					
+					/etc/init.d/fspms start
+				else
+					whiptail --title "Mode autonome" --msgbox "Policy Manager Server is unavailable or the IP address is wrong, please retry" 15 60 5
+				fi	
+					
+					
+	   fi
+	   
+	   if [ $chooseVersion = "3" ]; then
+					pmsip=$(whiptail --title "Normal Mode" --inputbox "To install normal mode PMP, need to download admin.pub on Policy Manager Server. Please insert the Policy Manager Server IP Address " 10 60 3>&1 1>&2 2>&3)
+					wget --no-check-certificate -O /var/opt/f-secure/fspms/data/admin.pub https://$pmsip/fsms/fsmsh.dll?FSMSCommand=GetPublicKey
+				if [ $? -eq 0 ]
+				then
+					pmsipqu='"'$pmsip'"'
+					
+					#add server address
+					
+					filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
+					while read -r ligne
+					do
+					NomProtocole=$(echo $ligne|cut -d"=" -f1)
+					
+					
+					if [ $NomProtocole = upstreamPmHost ]; then
+					uppmhost=$ligne
+					remplace="upstreamPmHost=$pmsipqu"
+					sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
+					fi
+					
+					
+					done < "$filefspmsconf"
+					
+					
+					/opt/f-secure/fspms/bin/fspms-config
+					
+					/etc/init.d/fspms start
+				else
+					whiptail --title "Mode autonome" --msgbox "Policy Manager Server is unavailable or the IP address is wrong, please retry" 15 60 5
+				fi	
+	   fi
+	   
+	   
+	   if [ $chooseVersion = "4" ]; then
+					pmsip=$(whiptail --title "Chaining mode" --inputbox "To install PMP in chaining mode, need the IP address of PMP source. Please insert the Policy Manager Proxy IP Address " 10 60 3>&1 1>&2 2>&3)
+					argdgut2="-Dguts2ServerUrl=http://$pmsip/guts2"
+					
+					#add server address
+					settings_file="/etc/opt/f-secure/fspms/fspms.conf"
+					. ${settings_file}
+
+					additional_java_args=$argdgut2
+                    new_settings_file=${settings_file}.$$
+
+					
+					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
+					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
+					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
+					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
+					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
+					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
+					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
+					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
+					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
+					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
+					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
+
+					mv -f ${new_settings_file} ${settings_file}
+					rm -f ${migrated_settings_file} >/dev/null 2>&1
+					/bin/chmod 644 ${settings_file}
+
+					
+					/opt/f-secure/fspms/bin/fspms-config
+					
+					/etc/init.d/fspms start
+				
+	   fi
+	   
+	   /opt/f-secure/fspms/bin/fspms-config
+	   
+	   
+	   /etc/init.d/fspms start
+	   
+        else
+        echo "Unsupported Operating System";
+        fi
+    fi
+
+
+
+
+
 
 
 
