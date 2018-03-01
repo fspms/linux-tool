@@ -565,20 +565,13 @@ desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destinat
 fi
 
 
-#if [ "$OPTION" = "8" ]; then
-
-DISTROS=$(whiptail --title "Database recover" --checklist \
-									"Choose options for recover tool" 15 60 4 \
-									"1" "Without scanning Alerts" OFF \
-									"2" "Without scanning Repport" OFF \
-									"3" "Change destination folder /var/opt/" ON \
-									"4" "Stop fspms service before recover database" OFF 3>&1 1>&2 2>&3)
+if [ "$OPTION" = "8" ]; then
 
 chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
                         "1" "Autonome - without PM Server" \
                         "2" "Reverse - download on PM Server" \
 						"3" "Normal - download on internet" \
-						"4" "Chaining" - download on another PMP 3>&1 1>&2 2>&3)
+						"4" "Chaining - download on another" PMP 3>&1 1>&2 2>&3)
                         #exitpara=$?
 						#if [ $exitpara = 0 ]; then
 	   
@@ -778,7 +771,7 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
        
     #fi
 
-#fi
+fi
 
 else
 sleep 1
