@@ -572,8 +572,8 @@ if [ "$OPTION" = "8" ]; then
                         "2" "Reverse - download on PM Server" \
 						"3" "Normal - download on internet" \
 						"4" "Chaining" - download on another PMP 3>&1 1>&2 2>&3)
-                        #exitpara=$?
-                        #if [ $exitpara = 0 ]; then
+                        exitpara=$?
+                        if [ $exitpara = 0 ]; then
 	   
 	   
 	filename="/etc/os-release"
@@ -606,8 +606,7 @@ if [ "$OPTION" = "8" ]; then
            	rm -f /tmp/$vrpmpmp
 			
 
-		/etc/init.d/fspms start
-		/opt/f-secure/fspms/bin/fspms-config
+
 		
 		#check SE LINUX
 		
@@ -642,7 +641,12 @@ if [ "$OPTION" = "8" ]; then
 	   filebinfsconf="/opt/f-secure/fspms/bin/fspms-config"
 	   
 	   if [ $chooseVersion = "1" ]; then
-					whiptail --title "Mode autonome" --msgbox "To install the autnome mode you have to insert 0.0.0.0 on Server address to the next question" 15 60 5				
+					whiptail --title "Mode autonome" --msgbox "To install the autnome mode you have to insert 0.0.0.0 on Server address to the next question" 15 60 5	
+
+					   /opt/f-secure/fspms/bin/fspms-config
+					/etc/init.d/fspms start
+
+				
 	   fi
 	   
 	   if [ $chooseVersion = "2" ]; then
@@ -763,10 +767,7 @@ if [ "$OPTION" = "8" ]; then
 				
 	   fi
 	   
-	   /opt/f-secure/fspms/bin/fspms-config
-	   
-	   
-	   /etc/init.d/fspms start
+
 	   
         else
         echo "Unsupported Operating System";
