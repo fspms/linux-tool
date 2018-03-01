@@ -581,9 +581,9 @@ if [ "$OPTION" = "8" ]; then
         do
         catname=$(echo $ligne|cut -d"=" -f1)
         if [ "$catname" = "ID" ]; then
-	distri=$(echo $ligne|cut -d"=" -f2)
-	fi
-	done < "$filename"
+		distri=$(echo $ligne|cut -d"=" -f2)
+		fi
+		done < "$filename"
 	
 
         if [ "$distri" = "centos" ] || [ "$distri" = '"centos"' ]
@@ -634,9 +634,9 @@ if [ "$OPTION" = "8" ]; then
            rm /tmp/$vdebpmp  
 		   
 	   chmod +x /etc/init.d/fspms
-	   
-	   
 	   dpkg -i /tmp/$vdebfspms13
+	   fi
+	   
 	   
 	   filebinfsconf="/opt/f-secure/fspms/bin/fspms-config"
 	   
@@ -773,11 +773,6 @@ if [ "$OPTION" = "8" ]; then
         echo "Unsupported Operating System";
         fi
     fi
-
-
-
-
-
 
 
 
