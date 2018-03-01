@@ -565,7 +565,7 @@ desti=$(whiptail --title "Change destination fsdiag folder" --inputbox "Destinat
 fi
 
 
-#if [ "$OPTION" = "8" ]; then
+if [ "$OPTION" = "9" ]; then
 
 chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
                         "1" "Autonome - without PM Server" \
@@ -771,7 +771,7 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
        
     #fi
 
-#fi
+fi
 
 else
 sleep 1
