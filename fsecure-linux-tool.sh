@@ -566,14 +566,13 @@ fi
 
 
 if [ "$OPTION" = "8" ]; then
-       
-	   chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
+chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
                         "1" "Autonome - without PM Server" \
                         "2" "Reverse - download on PM Server" \
 						"3" "Normal - download on internet" \
 						"4" "Chaining" - download on another PMP 3>&1 1>&2 2>&3)
-                        exitpara=$?
-   if [ $exitpara = 0 ]; then
+                        #exitpara=$?
+						#if [ $exitpara = 0 ]; then
 	   
 	   
 	filename="/etc/os-release"
@@ -769,7 +768,7 @@ if [ "$OPTION" = "8" ]; then
 
 	   
        
-    fi
+    #fi
 
 fi
 
