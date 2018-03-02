@@ -649,7 +649,7 @@ if [ $exitpara = 0 ]; then
 	   filebinfsconf="/opt/f-secure/fspms/bin/fspms-config"
 	   
 	   if [ $chooseVersion = "1" ]; then
-					whiptail --title "Mode autonome" --msgbox "To install the autnome mode you have to insert 0.0.0.0 on Server address to the next question" 15 60 5	
+					whiptail --title "Mode autonome" --msgbox "To install the autnome mode check if IP address [0.0.0.0] is present Sto the newt question (Server Adresse) and press ENTER" 15 60 5	
 					
 					
 					#Read conf file
