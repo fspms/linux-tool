@@ -687,7 +687,7 @@ if [ $exitpara = 0 ]; then
 					#sed -i "$linesa i upstreamPmHost=$pmsipqu" $filebinfsconf
 					
 					#add argument reverse + server add
-					
+					argdgut2="-DreverseProxy=true"
 					
 					#filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
 					#while read -r ligne
