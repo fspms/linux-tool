@@ -11,9 +11,9 @@ This script allows :
  - Policy Manager Database maintenance
  - Create backup
  - Reset admin password
- - Check and force database update
+ - Check and force database update (Dropped with v13)
  - Create a FSDIAG package for support
- - Check services on Linux
+ - Install PMP (New)
  
 
 #### INSTALLATION
@@ -31,6 +31,5 @@ If install is complete you can execute linux-tool when type "fspms"
 
 #### Roadmap
 
-- Add Policy Manager Proxy Setup and Config
 - Add Linux Security Setup
 - Add IGK Setup and automatique configuration 
