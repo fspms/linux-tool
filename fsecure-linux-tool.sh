@@ -653,17 +653,27 @@ if [ $exitpara = 0 ]; then
 					
 					
 					#Read conf file
-					filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
-					while read -r ligne
-					do
-					NomProtocole=$(echo $ligne|cut -d"=" -f1)
+					settings_file="/etc/opt/f-secure/fspms/fspms.conf"
+					. ${settings_file}
+
+					additional_java_args=""
+					upstreamPmHost="0.0.0.0"
+                    new_settings_file=${settings_file}.$$
+
 					
-					if [ $NomProtocole = upstreamPmHost ]; then
-					remplace="upstreamPmHost=0.0.0.0"
-					sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
-					fi
-					
-					done < "$filefspmsconf"
+					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
+					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
+					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
+					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
+					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
+					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
+					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
+					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
+					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
+					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
+					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
+
+					mv -f ${new_settings_file} ${settings_file}
 
 					/opt/f-secure/fspms/bin/fspms-config
 					/etc/init.d/fspms start
@@ -689,27 +699,6 @@ if [ $exitpara = 0 ]; then
 					#add argument reverse + server add
 					argdgut2="-DreverseProxy=true"
 					
-					#filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
-					#while read -r ligne
-					#do
-					#NomProtocole=$(echo $ligne|cut -d"=" -f1)
-					
-					#if [ $NomProtocole = additional_java_args ]; then
-					#addjavaarg=$ligne
-					#remplace='additional_java_args="-DreverseProxy=true"'
-					#sed -i 's/'$addjavaarg'/'$remplace'/g' $filefspmsconf
-					#fi
-					
-					#if [ $NomProtocole = upstreamPmHost ]; then
-					#uppmhost=$ligne
-					#remplace="upstreamPmHost=$pmsipqu"
-					#sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
-					#fi
-					
-					
-					#done < "$filefspmsconf"
-					
-					
 					#add server address
 					settings_file="/etc/opt/f-secure/fspms/fspms.conf"
 					. ${settings_file}
@@ -733,12 +722,7 @@ if [ $exitpara = 0 ]; then
 
 					mv -f ${new_settings_file} ${settings_file}
 					
-					
-					
-					
-					
-					
-					
+			
 					/opt/f-secure/fspms/bin/fspms-config
 					
 					/etc/init.d/fspms start
@@ -754,25 +738,28 @@ if [ $exitpara = 0 ]; then
 					wget --no-check-certificate -O /var/opt/f-secure/fspms/data/admin.pub https://$pmsip/fsms/fsmsh.dll?FSMSCommand=GetPublicKey
 				if [ $? -eq 0 ]
 				then
-					pmsipqu='"'$pmsip'"'
+	
+					settings_file="/etc/opt/f-secure/fspms/fspms.conf"
+					. ${settings_file}
+
+					additional_java_args=""
+					upstreamPmHost=$pmsip
+                    new_settings_file=${settings_file}.$$
+
 					
-					#add server address
-					
-					filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
-					while read -r ligne
-					do
-					NomProtocole=$(echo $ligne|cut -d"=" -f1)
-					
-					
-					if [ $NomProtocole = upstreamPmHost ]; then
-					uppmhost=$ligne
-					remplace="upstreamPmHost=$pmsipqu"
-					sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
-					fi
-					
-					
-					done < "$filefspmsconf"
-					
+					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
+					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
+					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
+					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
+					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
+					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
+					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
+					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
+					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
+					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
+					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
+
+					mv -f ${new_settings_file} ${settings_file}
 					
 					/opt/f-secure/fspms/bin/fspms-config
 					
