@@ -676,7 +676,7 @@ if [ $exitpara = 0 ]; then
 					wget --no-check-certificate -O /var/opt/f-secure/fspms/data/admin.pub https://$pmsip/fsms/fsmsh.dll?FSMSCommand=GetPublicKey
 				if [ $? -eq 0 ]
 				then
-					pmsipqu='"'$pmsip'"'
+					#pmsipqu='"'$pmsip'"'
 					# Check if custom upsteam exist
 					#checkline=$(grep -n "upstreamPmHost=$pmsipqu" $filebinfsconf | cut -d: -f 1)
 					#if [ ${#checkline} -gt 1 ]
@@ -696,7 +696,7 @@ if [ $exitpara = 0 ]; then
 					
 					#if [ $NomProtocole = additional_java_args ]; then
 					#addjavaarg=$ligne
-					argdgut2='additional_java_args="-DreverseProxy=true"'
+					#remplace='additional_java_args="-DreverseProxy=true"'
 					#sed -i 's/'$addjavaarg'/'$remplace'/g' $filefspmsconf
 					#fi
 					
