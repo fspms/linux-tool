@@ -610,7 +610,7 @@ if [ $exitpara = 0 ]; then
            	#suppression des paquets
            	rm -f /tmp/$vrpmpmp
 			
-
+			chmod +x /etc/init.d/fspms
 
 		
 		#check SE LINUX
@@ -629,7 +629,10 @@ if [ $exitpara = 0 ]; then
            apt-get update
            apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386
            cd /tmp/
-		   rm -f /tmp/fspmp*
+		   if [ -f "/tmp/$vrpmpmp" ]
+			then
+			rm -f /tmp/fspmp*
+		   fi
 					wget -t 5 $deblinkpmp
 	
            #install
@@ -638,8 +641,8 @@ if [ $exitpara = 0 ]; then
            #suppression des paquets
            rm /tmp/$vdebpmp  
 		   
-	   chmod +x /etc/init.d/fspms
-	   dpkg -i /tmp/$vdebfspms13
+	       chmod +x /etc/init.d/fspms
+	   
 	   fi
 	   
 	   
