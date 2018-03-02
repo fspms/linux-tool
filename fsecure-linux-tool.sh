@@ -567,15 +567,16 @@ fi
 
 if [ "$OPTION" = "9" ]; then
 
+
 chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of Policy Manager Proxy" 15 80 5 \
-                        "1" "Autonome - without PM Server" \
-                        "2" "Reverse - download on PM Server" \
-						"3" "Normal - download on internet" \
-						"4" "Chaining - download on another" PMP 3>&1 1>&2 2>&3)
-                        #exitpara=$?
-						#if [ $exitpara = 0 ]; then
+"1" "Autonome - without PM Server" \
+"2" "Reverse - download on PM Server" \
+"3" "Normal - download on internet" \
+"4" "Chaining - download on another PMP" 3>&1 1>&2 2>&3)
+exitpara=$?
+if [ $exitpara = 0 ]; then
 	   
-	   
+   
 	filename="/etc/os-release"
         while read -r ligne
         do
@@ -594,7 +595,11 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
 		yum install wget -y
 		yum install net-tools -y
 		cd /tmp/
-           	rm -f /tmp/fspmp*
+			if [ -f "/tmp/$vrpmpmp" ]
+			then
+			rm -f /tmp/fspmp*
+			fi
+           	
 					wget -t 5 $rpmlinkpmp
 				
            	
@@ -642,8 +647,22 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
 	   
 	   if [ $chooseVersion = "1" ]; then
 					whiptail --title "Mode autonome" --msgbox "To install the autnome mode you have to insert 0.0.0.0 on Server address to the next question" 15 60 5	
+					
+					
+					#Read conf file
+					filefspmsconf="/etc/opt/f-secure/fspms/fspms.conf"
+					while read -r ligne
+					do
+					NomProtocole=$(echo $ligne|cut -d"=" -f1)
+					
+					if [ $NomProtocole = upstreamPmHost ]; then
+					remplace="upstreamPmHost=0.0.0.0"
+					sed -i 's/'$ligne'/'$remplace'/g' $filefspmsconf
+					fi
+					
+					done < "$filefspmsconf"
 
-					   /opt/f-secure/fspms/bin/fspms-config
+					/opt/f-secure/fspms/bin/fspms-config
 					/etc/init.d/fspms start
 
 				
@@ -757,8 +776,8 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
 					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
 
 					mv -f ${new_settings_file} ${settings_file}
-					rm -f ${migrated_settings_file} >/dev/null 2>&1
-					/bin/chmod 644 ${settings_file}
+					#rm -f ${migrated_settings_file} >/dev/null 2>&1
+					#/bin/chmod 644 ${settings_file}
 
 					
 					/opt/f-secure/fspms/bin/fspms-config
@@ -767,9 +786,10 @@ chooseVersion=$(whiptail --title "Choose proxy mode" --menu "Choose the mode of 
 	   fi
 	   
 
-	   
+	 else
+		echo "cancel"
        
-    #fi
+    fi
 
 fi
 
