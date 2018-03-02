@@ -39,7 +39,11 @@ filename="/etc/os-release"
 				apt-get update
 				apt-get install git -y
 				git clone https://github.com/fspms/linux-tool /opt/fspms
+				if [ -f "/sbin/fspms" ]
+				then
 				rm /sbin/fspms
+			        fi
+				
 				echo "sh /opt/fspms/fsecure-linux-tool.sh" > /sbin/fspms
 				chmod +x /sbin/fspms
         fi  
