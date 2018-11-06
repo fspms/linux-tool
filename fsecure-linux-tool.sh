@@ -7,13 +7,13 @@ hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-lin
 deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua_9.01.3_amd64.deb"
 deblinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms_12.40.81151_amd64.deb"
 
-deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.10.84021_amd64.deb"
+deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.11.84108_amd64.deb"
 
 rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua-9.01.3-1.x86_64.rpm"
 rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms-12.40.81151-1.x86_64.rpm"
 
 
-rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.10.84021-1.x86_64.rpm"
+rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.11.84108-1.x86_64.rpm"
 
 vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
@@ -22,11 +22,16 @@ vrpmfspmaua=$(echo $rpmlinkfspmaua|cut -d"/" -f7)
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 vrpmfspms13=$(echo $rpmlinkfspms13|cut -d"/" -f7)
 
+#TreatShield DEB
+deblinkthreat="https://download.f-secure.com/corpro/threatshield/current/f-secure-threatshield_6.0.6-1_amd64.deb"
+vrdebthreat=$(echo $deblinkthreat|cut -d"/" -f7)
+
+
 
 #FSPMP DEB/RPM
 
-deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_13.10.84021_amd64.deb"
-rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-13.10.84021-1.x86_64.rpm"
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_13.11.84108_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-13.11.84108-1.x86_64.rpm"
 vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
 vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
@@ -97,7 +102,8 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy" 3>&1 1>&2 2>&3)
+"8" "Install PM Proxy" \
+"9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -811,6 +817,37 @@ if [ $exitpara = 0 ]; then
     fi
 
 fi
+
+################################################################################################################################################################
+
+if [ "$OPTION" = "9" ]; then
+
+	DistriOS="/etc/os-release"
+        while read -r ligne
+        do
+        catname=$(echo $ligne|cut -d"=" -f1)
+        if [ "$catname" = "ID" ]; then
+	    distri=$(echo $ligne|cut -d"=" -f2)
+	    fi
+	done < "$DistriOS"
+	     
+        if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+        then
+        echo "Debian or Ubuntu"
+		
+           apt-get update
+           #dpkg --add-architecture i386
+           apt-get update
+           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g
+           cd /tmp/
+	       rm -f /tmp/f-secure-threatshield*
+		   wget -t 5 $deblinkthreat
+		   dpkg -i $vrdebthreat
+	    fi
+
+
+fi
+
 
 else
 sleep 1
