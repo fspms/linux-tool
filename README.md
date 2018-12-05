@@ -45,4 +45,4 @@ PM Proxy install menu :
 #### Roadmap
 
 - Add Linux Security Setup
-- Add IGK Setup and automatique configuration 
+- Add ThreatShield Setup and automatique configuration 
