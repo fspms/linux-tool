@@ -1,32 +1,31 @@
 #!/bin/bash
 
 #Variable
-hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-linux-hotfix-1.zip"
-
 #FSPMS DEB / RPM
-deblinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua_9.01.3_amd64.deb"
-deblinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms_12.40.81151_amd64.deb"
 
-deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms_13.10.84021_amd64.deb"
+deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_14.00.87145_amd64.deb"
+deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/pm_linux13.1x/fspms_13.11.84108_amd64.deb"
 
-rpmlinkfspmaua="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspmaua-9.01.3-1.x86_64.rpm"
-rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux12.40/fspms-12.40.81151-1.x86_64.rpm"
+rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-14.00.87145-1.x86_64.rpm"
+rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/pm_linux13.1x/fspms-13.11.84108-1.x86_64.rpm"
 
 
-rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/current/fspms-13.10.84021-1.x86_64.rpm"
-
-vdebfspmaua=$(echo $deblinkfspmaua|cut -d"/" -f7)
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
 vdebfspms13=$(echo $deblinkfspms13|cut -d"/" -f7)
-vrpmfspmaua=$(echo $rpmlinkfspmaua|cut -d"/" -f7)
+
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
 vrpmfspms13=$(echo $rpmlinkfspms13|cut -d"/" -f7)
+
+#TreatShield DEB
+deblinkthreat="https://download.f-secure.com/corpro/threatshield/current/f-secure-threatshield_6.0.6-1_amd64.deb"
+vrdebthreat=$(echo $deblinkthreat|cut -d"/" -f7)
+
 
 
 #FSPMP DEB/RPM
 
-deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_13.10.84021_amd64.deb"
-rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-13.10.84021-1.x86_64.rpm"
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_14.00.87145_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-14.00.87145-1.x86_64.rpm"
 vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
 vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
@@ -92,12 +91,13 @@ while [ "$menu" != 1 ]; do
 OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 30 70 10 \
 "1" "Install / Update" \
 "2" "Port Used" \
-"3" "Install HotFix" \
+"3" "Install HotFix (Dropped)" \
 "4" "Check F-secure communication" \
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy" 3>&1 1>&2 2>&3)
+"8" "Install PM Proxy" \
+"9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -106,8 +106,8 @@ if [ $exitstatus = 0 ]; then
 if [ "$OPTION" = "1" ]; then
        
 	   chooseVersion=$(whiptail --title "Choose version" --menu "Choose version of Policy Manager" 15 80 5 \
-                        "1" "Policy Manager 13.01" \
-                        "2" "Policy Manager 12.40 with AUA"$hostweb2 3>&1 1>&2 2>&3)
+                        "1" "Policy Manager 13.11" \
+                        "2" "Policy Manager 14.00"$hostweb2 3>&1 1>&2 2>&3)
                         #exitpara=$?
                         #if [ $exitpara = 0 ]; then
 	   
@@ -135,7 +135,6 @@ if [ "$OPTION" = "1" ]; then
 					wget -t 5 $rpmlinkfspms13
 				fi
 				if [ $chooseVersion = "2" ]; then
-					wget -t 5 $rpmlinkfspmaua
 					wget -t 5 $rpmlinkfspms
 				fi
               	#check bdd
@@ -154,7 +153,6 @@ if [ "$OPTION" = "1" ]; then
                 rpm -i /tmp/$vrpmfspms13
 			fi
 			if [ $chooseVersion = "2" ]; then
-				rpm -i /tmp/$vrpmfspmaua
                 rpm -i /tmp/$vrpmfspms
 			fi
 			
@@ -187,7 +185,6 @@ if [ "$OPTION" = "1" ]; then
 					wget -t 5 $deblinkfspms13
 				fi
 				if [ $chooseVersion = "2" ]; then
-					wget -t 5 $deblinkfspmaua
 					wget -t 5 $deblinkfspms
 				fi
            #check service fspms
@@ -206,7 +203,6 @@ if [ "$OPTION" = "1" ]; then
 					dpkg -i /tmp/$vdebfspms13
 				fi
 				if [ $chooseVersion = "2" ]; then
-					dpkg -i /tmp/$vdebfspmaua
 					dpkg -i /tmp/$vdebfspms
 				fi
 
@@ -422,48 +418,6 @@ if [ "$OPTION" = "4" ]; then
 fi
  
 
-
-
-if [ "$OPTION" = "3" ]; then
-        echo "======================================="
-        echo "============ HOTFIX INSTALL ==========="
-        echo "======================================="
-        echo ""
-
-   if [ -e "/opt/f-secure/fspms/version.txt" ]
-   then
-      version=$(cat /opt/f-secure/fspms/version.txt)
-
-	if [ "$version" = "12.40.81151" ]
-   	then
-		echo "installation hotfixe"
-	   	#Install unzip
-	   	apt-get install unzip -y
-   		#download hotfix for 12.40.81151
-   		cd /tmp
-   		wget $hotfix1240
-   		#unzip on /tmp
-   		unzip fspm*.zip
-	   	#stop service
-	   	/etc/init.d/fspms stop
-	   	#copy hotfix
-	   	cp -f /tmp/fspm*/fspms-webapp-1-SNAPSHOT.jar /opt/f-secure/fspms/lib/
-	    	#delete zip and unzip folder
-	   	rm -f /tmp/fspm*.zip
-	   	rm -rf /tmp/fspm*
-		
-		#add new version information
-		#echo "12.40.81153" > /opt/f-secure/fspms/version.txt
-		
-	   	#start service
-	   	/etc/init.d/fspms start
-	else
-           whiptail --title "Hotfix" --msgbox "Hotfix not available for this version of Policy Manager Server" 8 78
-	fi
-   else
-      whiptail --title "Hotfix" --msgbox "Please install Policy Manager server first" 8 78
-   fi
-fi
 
 
 if [ "$OPTION" = "5" ]; then
@@ -811,6 +765,37 @@ if [ $exitpara = 0 ]; then
     fi
 
 fi
+
+################################################################################################################################################################
+
+if [ "$OPTION" = "9" ]; then
+
+	DistriOS="/etc/os-release"
+        while read -r ligne
+        do
+        catname=$(echo $ligne|cut -d"=" -f1)
+        if [ "$catname" = "ID" ]; then
+	    distri=$(echo $ligne|cut -d"=" -f2)
+	    fi
+	done < "$DistriOS"
+	     
+        if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+        then
+        echo "Debian or Ubuntu"
+		
+           apt-get update
+           #dpkg --add-architecture i386
+           apt-get update
+           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g
+           cd /tmp/
+	       rm -f /tmp/f-secure-threatshield*
+		   wget -t 5 $deblinkthreat
+		   dpkg -i $vrdebthreat
+	    fi
+
+
+fi
+
 
 else
 sleep 1
