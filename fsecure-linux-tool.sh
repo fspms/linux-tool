@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #Variable
-hotfix1240="https://download.f-secure.com/corpro/pm_linux/current/fspm-12.40-linux-hotfix-1.zip"
-
 #FSPMS DEB / RPM
 
 deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_14.00.87145_amd64.deb"
@@ -26,8 +24,8 @@ vrdebthreat=$(echo $deblinkthreat|cut -d"/" -f7)
 
 #FSPMP DEB/RPM
 
-deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_13.11.84108_amd64.deb"
-rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-13.11.84108-1.x86_64.rpm"
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_14.00.87145_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-14.00.87145-1.x86_64.rpm"
 vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
 vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
@@ -93,7 +91,7 @@ while [ "$menu" != 1 ]; do
 OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 30 70 10 \
 "1" "Install / Update" \
 "2" "Port Used" \
-"3" "Install HotFix" \
+"3" "Install HotFix (Dropped)" \
 "4" "Check F-secure communication" \
 "5" "Database tool" \
 "6" "Reset admin password" \
@@ -420,48 +418,6 @@ if [ "$OPTION" = "4" ]; then
 fi
  
 
-
-
-if [ "$OPTION" = "99" ]; then
-        echo "======================================="
-        echo "============ HOTFIX INSTALL ==========="
-        echo "======================================="
-        echo ""
-
-   if [ -e "/opt/f-secure/fspms/version.txt" ]
-   then
-      version=$(cat /opt/f-secure/fspms/version.txt)
-
-	if [ "$version" = "12.40.81151" ]
-   	then
-		echo "installation hotfixe"
-	   	#Install unzip
-	   	apt-get install unzip -y
-   		#download hotfix for 12.40.81151
-   		cd /tmp
-   		wget $hotfix1240
-   		#unzip on /tmp
-   		unzip fspm*.zip
-	   	#stop service
-	   	/etc/init.d/fspms stop
-	   	#copy hotfix
-	   	cp -f /tmp/fspm*/fspms-webapp-1-SNAPSHOT.jar /opt/f-secure/fspms/lib/
-	    	#delete zip and unzip folder
-	   	rm -f /tmp/fspm*.zip
-	   	rm -rf /tmp/fspm*
-		
-		#add new version information
-		#echo "12.40.81153" > /opt/f-secure/fspms/version.txt
-		
-	   	#start service
-	   	/etc/init.d/fspms start
-	else
-           whiptail --title "Hotfix" --msgbox "Hotfix not available for this version of Policy Manager Server" 8 78
-	fi
-   else
-      whiptail --title "Hotfix" --msgbox "Please install Policy Manager server first" 8 78
-   fi
-fi
 
 
 if [ "$OPTION" = "5" ]; then
