@@ -96,7 +96,7 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy" \
+"8" "Install PM Proxy 14" \
 "9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
@@ -178,7 +178,7 @@ if [ "$OPTION" = "1" ]; then
            apt-get update
            dpkg --add-architecture i386
            apt-get update
-           apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386
+           apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386 -y
            cd /tmp/
 	   rm -f /tmp/fspm*
 			if [ $chooseVersion = "1" ]; then
@@ -783,17 +783,19 @@ if [ "$OPTION" = "9" ]; then
         then
         echo "Debian or Ubuntu"
 		
-           apt-get update
+           #apt-get update
            #dpkg --add-architecture i386
            apt-get update
-           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g
+           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
            cd /tmp/
-	       rm -f /tmp/f-secure-threatshield*
+	       #rm -f /tmp/f-secure-threatshield*
 		   wget -t 5 $deblinkthreat
 		   dpkg -i $vrdebthreat
 	    fi
 
-
+#Import CA
+#Add new CA
+#Convert multi CA
 fi
 
 
