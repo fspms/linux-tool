@@ -103,7 +103,7 @@ exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
      
-if [ "$OPTION" = "1" ]; then
+	if [ "$OPTION" = "1" ]; then
        
 	   chooseVersion=$(whiptail --title "Choose version" --menu "Choose version of Policy Manager" 15 80 5 \
                         "1" "Policy Manager 13.11" \
@@ -117,9 +117,9 @@ if [ "$OPTION" = "1" ]; then
         do
         catname=$(echo $ligne|cut -d"=" -f1)
         if [ "$catname" = "ID" ]; then
-	distri=$(echo $ligne|cut -d"=" -f2)
-	fi
-	done < "$filename"
+		distri=$(echo $ligne|cut -d"=" -f2)
+		fi
+		done < "$filename"
 	
 
         if [ "$distri" = "centos" ] || [ "$distri" = '"centos"' ]
@@ -180,7 +180,7 @@ if [ "$OPTION" = "1" ]; then
            apt-get update
            apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386 -y
            cd /tmp/
-	   rm -f /tmp/fspm*
+		   rm -f /tmp/fspm*
 			if [ $chooseVersion = "1" ]; then
 					wget -t 5 $deblinkfspms13
 				fi
@@ -770,34 +770,63 @@ fi
 
 if [ "$OPTION" = "9" ]; then
 
-	DistriOS="/etc/os-release"
+#GESTION CA
+
+ManageCA=$(whiptail --title "CA for ThreatShield" --menu "Choose a option for your certificate" 15 80 5 \
+                        "1" "Import your certificate" \
+                        "2" "Generate new certificate"$hostweb2 3>&1 1>&2 2>&3)
+exitpara=$?
+if [ $exitpara = 0 ]; then
+
+						
+#	if [ $ManageCA = "1" ]; then
+#	fi
+	
+	if [ $ManageCA = "2" ]; then
+		ManageCANewKey=$(whiptail --title "Choose algorithm" --menu "Choose the algorithm, you need a file for DSA and EC" 15 80 5 \
+		"1" "RSA" \
+		"2" "DSA" \
+		"3" "EC" 3>&1 1>&2 2>&3)
+		
+		if [ $ManageCANewKey = "1" ]; then
+		RSABits=$(whiptail --title "Choose bits size RSA" --inputbox "RSA bits size " 10 60 2048 --nocancel 3>&1 1>&2 2>&3)
+		RSABname=$(whiptail --title "Choose CA name" --inputbox "CA name " 10 60 certificate --nocancel 3>&1 1>&2 2>&3)
+		openssl req -newkey rsa:$RSABits -nodes -keyout /tmp/$RSABname"_key.pem" -x509 -out /tmp/$RSABname"_certificate.pem"
+		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+		
+		DistriOS="/etc/os-release"
         while read -r ligne
         do
         catname=$(echo $ligne|cut -d"=" -f1)
-        if [ "$catname" = "ID" ]; then
-	    distri=$(echo $ligne|cut -d"=" -f2)
-	    fi
-	done < "$DistriOS"
+			if [ "$catname" = "ID" ]; then
+			distri=$(echo $ligne|cut -d"=" -f2)
+			fi
+		done < "$DistriOS"
 	     
-        if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
-        then
-        echo "Debian or Ubuntu"
-		
-           #apt-get update
-           #dpkg --add-architecture i386
-           apt-get update
-           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
-           cd /tmp/
-	       #rm -f /tmp/f-secure-threatshield*
-		   wget -t 5 $deblinkthreat
-		   dpkg -i $vrdebthreat
-	    fi
+			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+			then
+			echo "Debian or Ubuntu"
+			apt-get update
+			apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+			cd /tmp/
+			#rm -f /tmp/f-secure-threatshield*
+			wget -t 5 $deblinkthreat
+			dpkg -i $vrdebthreat
+			fi
+		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem --key /tmp/$RSABname"_key.pem
+		fi
+	fi
+	
+
+fi
+
+
 
 #Import CA
 #Add new CA
 #Convert multi CA
-fi
 
+fi
 
 else
 sleep 1
