@@ -813,7 +813,7 @@ if [ $exitpara = 0 ]; then
 			wget -t 5 $deblinkthreat
 			dpkg -i $vrdebthreat
 			fi
-		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem --key /tmp/$RSABname"_key.pem
+		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem" --key /tmp/$RSABname"_key.pem"
 		fi
 	fi
 	
