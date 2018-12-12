@@ -38,7 +38,7 @@ check_os () {
 
 DistriOS="/etc/os-release"
 		distri=$(cat /etc/os-release | grep  ID= | grep -v VERSION_ID |  cut -d"=" -f2)
-		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2 | sed 's/\"//g')
+		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2 | sed 's/\"//g' | sed 's/\.//g')
         #while read -r ligne
         #do
         #catname=$(echo $ligne|cut -d"=" -f1)
