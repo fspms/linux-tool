@@ -782,7 +782,6 @@ if [ $exitpara = 0 ]; then
 		
 		else
 		whiptail --title "Import CA format" --msgbox "This certificate is not valid or the file doesn't exist" 10 60
-		exit
 		fi
 	
 	
