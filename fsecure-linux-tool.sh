@@ -745,11 +745,11 @@ if [ "$OPTION" = "9" ]; then
 ManageCA=$(whiptail --title "CA for ThreatShield" --menu "Choose a option for your certificate" 15 80 5 \
                         "1" "Import your certificate" \
                         "2" "Generate new certificate" \
-						"3" "Transparent mode" \
-						"4" "Access log" \
-						"5" "Number of connection" \
-						"6" "Change license" \
-						"7" "Check License" $hostweb2 3>&1 1>&2 2>&3)
+						"3" "Transparent mode -- Soon" \
+						"4" "Access log -- Soon" \
+						"5" "Number of connection -- Soon" \
+						"6" "Change license -- Soon" \
+						"7" "Check License-- Soon" $hostweb2 3>&1 1>&2 2>&3)
 exitpara=$?
 if [ $exitpara = 0 ]; then
 
@@ -817,8 +817,6 @@ if [ $exitpara = 0 ]; then
 		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem" --key /tmp/$RSABname"_key.pem"
 		fi
 	fi
-	
-
 fi
 
 #activate transparent mode 
