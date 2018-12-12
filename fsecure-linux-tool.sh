@@ -38,7 +38,7 @@ check_os () {
 
 DistriOS="/etc/os-release"
 		distri=$(cat /etc/os-release | grep  ID= | grep -v VERSION_ID |  cut -d"=" -f2)
-		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2)
+		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2 | sed 's/\"//g')
         #while read -r ligne
         #do
         #catname=$(echo $ligne|cut -d"=" -f1)
@@ -297,6 +297,8 @@ if [ "$OPTION" = "2" ]; then
         hostweb2=$(echo $ligne|cut -d'"' -f2)
         echo "Active Web Reporting port : "$hostweb2
 		fi
+		
+		
         
 		done < "$filename"
         echo ""
@@ -770,7 +772,13 @@ if [ $exitpara = 0 ]; then
 			then
 			echo "Debian or Ubuntu"
 			apt-get update
-			apt-get install curl libcurl4 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+				if [ "$distri_version" -ge 1804 ]
+				then
+				apt-get install curl libcurl4 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+				echo "version 18.04"
+				else
+				apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+				fi
 			cd /tmp/
 			#rm -f /tmp/f-secure-threatshield*
 			wget -t 5 $deblinkthreat
