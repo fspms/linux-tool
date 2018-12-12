@@ -32,6 +32,41 @@ vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 
+
+################################################################################################################
+check_os () {
+
+DistriOS="/etc/os-release"
+		distri=$(cat /etc/os-release | grep  ID= | grep -v VERSION_ID |  cut -d"=" -f2)
+		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2 | sed 's/\"//g' | sed 's/\.//g')
+        #while read -r ligne
+        #do
+        #catname=$(echo $ligne|cut -d"=" -f1)
+		#	if [ "$catname" = "ID" ]; then
+		#	distri=$(echo $ligne|cut -d"=" -f2)
+		#	fi
+			
+		#done < "$DistriOS"
+}
+
+
+change_fspms_conf () {
+echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
+echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
+echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
+echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
+echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
+echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
+echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
+echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
+echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
+echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
+echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
+
+mv -f ${new_settings_file} ${settings_file}
+}
+
+
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
 # Only root can use this script
@@ -96,14 +131,14 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy" \
+"8" "Install PM Proxy 14" \
 "9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
      
-if [ "$OPTION" = "1" ]; then
+	if [ "$OPTION" = "1" ]; then
        
 	   chooseVersion=$(whiptail --title "Choose version" --menu "Choose version of Policy Manager" 15 80 5 \
                         "1" "Policy Manager 13.11" \
@@ -112,14 +147,7 @@ if [ "$OPTION" = "1" ]; then
                         #if [ $exitpara = 0 ]; then
 	   
 	   
-	filename="/etc/os-release"
-        while read -r ligne
-        do
-        catname=$(echo $ligne|cut -d"=" -f1)
-        if [ "$catname" = "ID" ]; then
-	distri=$(echo $ligne|cut -d"=" -f2)
-	fi
-	done < "$filename"
+		check_os
 	
 
         if [ "$distri" = "centos" ] || [ "$distri" = '"centos"' ]
@@ -178,9 +206,9 @@ if [ "$OPTION" = "1" ]; then
            apt-get update
            dpkg --add-architecture i386
            apt-get update
-           apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386
+           apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386 -y
            cd /tmp/
-	   rm -f /tmp/fspm*
+		   rm -f /tmp/fspm*
 			if [ $chooseVersion = "1" ]; then
 					wget -t 5 $deblinkfspms13
 				fi
@@ -269,6 +297,8 @@ if [ "$OPTION" = "2" ]; then
         hostweb2=$(echo $ligne|cut -d'"' -f2)
         echo "Active Web Reporting port : "$hostweb2
 		fi
+		
+		
         
 		done < "$filename"
         echo ""
@@ -365,8 +395,8 @@ if [ "$OPTION" = "4" ]; then
      xmlshavlik=$(host -W1 xml.shavlik.com)
      xmlshavlikf=$(echo $xmlshavlik |grep "NXDOMAIN\|timed out")
 
-     avanti=$(host -W1 xml.avanti.com)
-     avantif=$(echo $avanti | grep "NXDOMAIN\|timed out")
+     ivanti=$(host -W1 xml.ivanti.com)
+     ivantif=$(echo $ivanti | grep "NXDOMAIN\|timed out")
 
      orsp=$(host -W1 orsp.f-secure.com)
      orspf=$(echo $orsp | grep "NXDOMAIN\|timed out")
@@ -385,13 +415,13 @@ if [ "$OPTION" = "4" ]; then
      fi
 
 
-     if [ ${#xmlshavlikf} -gt 1 ] || [ ${#avantif} -gt 1 ]
+     if [ ${#xmlshavlikf} -gt 1 ] || [ ${#ivantif} -gt 1 ]
      then
 	 swupchk="ERROR"
-     echo  "Check xml.shavlik.com and avanti = ERROR"
+     echo  "Check xml.shavlik.com and ivanti = ERROR"
      else
 	 swupchk="OK"
-     echo  "Check xml.shavlik.com and avanti = OK"
+     echo  "Check xml.shavlik.com and ivanti = OK"
      fi
 
      if [ ${#fsecuref} -gt 1 ]
@@ -532,14 +562,8 @@ if [ $exitpara = 0 ]; then
 	   
    
 	filename="/etc/os-release"
-        while read -r ligne
-        do
-        catname=$(echo $ligne|cut -d"=" -f1)
-        if [ "$catname" = "ID" ]; then
-		distri=$(echo $ligne|cut -d"=" -f2)
-		fi
-		done < "$filename"
-	
+        
+		check_os
 
         if [ "$distri" = "centos" ] || [ "$distri" = '"centos"' ]
         then
@@ -614,20 +638,7 @@ if [ $exitpara = 0 ]; then
 					upstreamPmHost="0.0.0.0"
                     new_settings_file=${settings_file}.$$
 
-					
-					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
-					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
-					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
-					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
-					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
-					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
-					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
-					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
-					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
-					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
-					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
-
-					mv -f ${new_settings_file} ${settings_file}
+					change_fspms_conf
 
 					/opt/f-secure/fspms/bin/fspms-config
 					/etc/init.d/fspms start
@@ -661,20 +672,7 @@ if [ $exitpara = 0 ]; then
 					upstreamPmHost=$pmsip
                     new_settings_file=${settings_file}.$$
 
-					
-					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
-					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
-					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
-					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
-					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
-					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
-					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
-					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
-					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
-					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
-					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
-
-					mv -f ${new_settings_file} ${settings_file}
+					change_fspms_conf
 					
 			
 					/opt/f-secure/fspms/bin/fspms-config
@@ -700,20 +698,7 @@ if [ $exitpara = 0 ]; then
 					upstreamPmHost=$pmsip
                     new_settings_file=${settings_file}.$$
 
-					
-					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
-					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
-					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
-					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
-					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
-					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
-					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
-					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
-					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
-					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
-					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
-
-					mv -f ${new_settings_file} ${settings_file}
+					change_fspms_conf
 					
 					/opt/f-secure/fspms/bin/fspms-config
 					
@@ -735,22 +720,7 @@ if [ $exitpara = 0 ]; then
 					additional_java_args=$argdgut2
                     new_settings_file=${settings_file}.$$
 
-					
-					echo "hostModulePort=\"${hostModulePort}\""                                        > ${new_settings_file}
-					echo "hostModuleHttpsPort=\"${hostModuleHttpsPort}\""                             >> ${new_settings_file}
-					echo "adminModulePort=\"${adminModulePort}\""                                     >> ${new_settings_file}
-					echo "adminExtensionLocalhostRestricted=\"${adminExtensionLocalhostRestricted}\"" >> ${new_settings_file}
-					echo "webReportingEnabled=\"${webReportingEnabled}\""                             >> ${new_settings_file}
-					echo "webReportingPort=\"${webReportingPort}\""                                   >> ${new_settings_file}
-					echo "ausPort=\"${ausPort}\""                                                     >> ${new_settings_file}
-					echo "jettyStopPort=\"${jettyStopPort}\""                                         >> ${new_settings_file}
-					echo "upstreamPmHost=\"${upstreamPmHost}\""                                       >> ${new_settings_file}
-					echo "upstreamPmPort=\"${upstreamPmPort}\""                                       >> ${new_settings_file}
-					echo "additional_java_args=\"${additional_java_args}\""                           >> ${new_settings_file}
-
-					mv -f ${new_settings_file} ${settings_file}
-					#rm -f ${migrated_settings_file} >/dev/null 2>&1
-					#/bin/chmod 644 ${settings_file}
+					change_fspms_conf
 
 					
 					/opt/f-secure/fspms/bin/fspms-config
@@ -770,32 +740,89 @@ fi
 
 if [ "$OPTION" = "9" ]; then
 
-	DistriOS="/etc/os-release"
-        while read -r ligne
-        do
-        catname=$(echo $ligne|cut -d"=" -f1)
-        if [ "$catname" = "ID" ]; then
-	    distri=$(echo $ligne|cut -d"=" -f2)
-	    fi
-	done < "$DistriOS"
+#GESTION CA
+
+ManageCA=$(whiptail --title "CA for ThreatShield" --menu "Choose a option for your certificate" 15 80 5 \
+                        "1" "Import your certificate" \
+                        "2" "Generate new certificate" \
+						"3" "Transparent mode -- Soon" \
+						"4" "Access log -- Soon" \
+						"5" "Number of connection -- Soon" \
+						"6" "Change license -- Soon" \
+						"7" "Check License-- Soon" $hostweb2 3>&1 1>&2 2>&3)
+exitpara=$?
+if [ $exitpara = 0 ]; then
+
+						
+	if [ $ManageCA = "1" ]; then
+	importCA=$(whiptail --title "Import certificate" --inputbox "Import certificate PKCS12 (.pfx or .p12)" 10 60 /tmp/certificate.pfx --nocancel 3>&1 1>&2 2>&3)
+	extensionca=${importCA##*.}
+        if [ -e "$importCA" ] && ([ "$extensionca" = "pfx" ] || [ "$extensionca" = "p12" ]); then
+			psimportCA=$(whiptail --title "Password CA" --inputbox "Password : " 10 60  --nocancel 3>&1 1>&2 2>&3)
+			if [ "$psimportCA" -z ]; then
+			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys 
+			else
+			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys -passin $psimportCA
+			fi
+		openssl pkcs12 -in $importCA -out /tmp/newfile.key.pem -nocerts -nodes 
+		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+		check_os
 	     
-        if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
-        then
-        echo "Debian or Ubuntu"
+			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+			then
+			echo "Debian or Ubuntu"
+			apt-get update
+			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+			cd /tmp/
+			#rm -f /tmp/f-secure-threatshield*
+			wget -t 5 $deblinkthreat
+			dpkg -i $vrdebthreat
+			fi
+		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/newfile.crt.pem --key /tmp/newfile.key.pem
 		
-           apt-get update
-           #dpkg --add-architecture i386
-           apt-get update
-           apt-get curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g
-           cd /tmp/
-	       rm -f /tmp/f-secure-threatshield*
-		   wget -t 5 $deblinkthreat
-		   dpkg -i $vrdebthreat
-	    fi
-
-
+		else
+		whiptail --title "Import CA format" --msgbox "This certificate is not valid or the file doesn't exist" 10 60
+		fi
+	
+	
+	fi
+	
+	if [ $ManageCA = "2" ]; then
+		ManageCANewKey=$(whiptail --title "Choose algorithm" --menu "Choose the algorithm, you need a file for DSA and EC" 15 80 5 \
+		"1" "RSA" \
+		"2" "DSA -- Soon" \
+		"3" "EC -- Soon" 3>&1 1>&2 2>&3)
+		
+		if [ $ManageCANewKey = "1" ]; then
+		RSABits=$(whiptail --title "Choose bits size RSA" --inputbox "RSA bits size " 10 60 2048 --nocancel 3>&1 1>&2 2>&3)
+		RSABname=$(whiptail --title "Choose CA name" --inputbox "CA name " 10 60 certificate --nocancel 3>&1 1>&2 2>&3)
+		openssl req -newkey rsa:$RSABits -nodes -keyout /tmp/$RSABname"_key.pem" -x509 -out /tmp/$RSABname"_certificate.pem"
+		openssl pkcs12 -export -in /tmp/$RSABname"_certificate.pem" -inkey /tmp/$RSABname"_key.pem" -out $RSABname".pfx"
+		whiptail --title "Certificat" --msgbox "New certicates are available in '/tmp' folder in PEM and PFX" 10 60
+		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+	
+		
+		check_os
+	     
+			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+			then
+			echo "Debian or Ubuntu"
+			apt-get update
+			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+			cd /tmp/
+			#rm -f /tmp/f-secure-threatshield*
+			wget -t 5 $deblinkthreat
+			dpkg -i $vrdebthreat
+			fi
+		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem" --key /tmp/$RSABname"_key.pem"
+		fi
+	fi
 fi
 
+#activate transparent mode 
+#echo 1 > /etc/opt/f-secure/fsbg/mgmt/settings/1.3.6.1.4.1.2213.47.1.10.210.80
+
+fi
 
 else
 sleep 1
