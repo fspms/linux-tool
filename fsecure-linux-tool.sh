@@ -37,13 +37,16 @@ lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 check_os () {
 
 DistriOS="/etc/os-release"
-        while read -r ligne
-        do
-        catname=$(echo $ligne|cut -d"=" -f1)
-			if [ "$catname" = "ID" ]; then
-			distri=$(echo $ligne|cut -d"=" -f2)
-			fi
-		done < "$DistriOS"
+		distri=$(cat /etc/os-release | grep  ID= | grep -v VERSION_ID |  cut -d"=" -f2)
+		distri_version=$(cat /etc/os-release | grep  VERSION_ID= | cut -d"=" -f2)
+        #while read -r ligne
+        #do
+        #catname=$(echo $ligne|cut -d"=" -f1)
+		#	if [ "$catname" = "ID" ]; then
+		#	distri=$(echo $ligne|cut -d"=" -f2)
+		#	fi
+			
+		#done < "$DistriOS"
 }
 
 
@@ -390,8 +393,8 @@ if [ "$OPTION" = "4" ]; then
      xmlshavlik=$(host -W1 xml.shavlik.com)
      xmlshavlikf=$(echo $xmlshavlik |grep "NXDOMAIN\|timed out")
 
-     avanti=$(host -W1 xml.avanti.com)
-     avantif=$(echo $avanti | grep "NXDOMAIN\|timed out")
+     ivanti=$(host -W1 xml.ivanti.com)
+     ivantif=$(echo $ivanti | grep "NXDOMAIN\|timed out")
 
      orsp=$(host -W1 orsp.f-secure.com)
      orspf=$(echo $orsp | grep "NXDOMAIN\|timed out")
@@ -410,13 +413,13 @@ if [ "$OPTION" = "4" ]; then
      fi
 
 
-     if [ ${#xmlshavlikf} -gt 1 ] || [ ${#avantif} -gt 1 ]
+     if [ ${#xmlshavlikf} -gt 1 ] || [ ${#ivantif} -gt 1 ]
      then
 	 swupchk="ERROR"
-     echo  "Check xml.shavlik.com and avanti = ERROR"
+     echo  "Check xml.shavlik.com and ivanti = ERROR"
      else
 	 swupchk="OK"
-     echo  "Check xml.shavlik.com and avanti = OK"
+     echo  "Check xml.shavlik.com and ivanti = OK"
      fi
 
      if [ ${#fsecuref} -gt 1 ]
