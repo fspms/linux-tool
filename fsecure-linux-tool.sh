@@ -744,25 +744,62 @@ if [ "$OPTION" = "9" ]; then
 
 ManageCA=$(whiptail --title "CA for ThreatShield" --menu "Choose a option for your certificate" 15 80 5 \
                         "1" "Import your certificate" \
-                        "2" "Generate new certificate"$hostweb2 3>&1 1>&2 2>&3)
+                        "2" "Generate new certificate" \
+						"3" "Transparent mode" \
+						"4" "Access log" \
+						"5" "Number of connection" \
+						"6" "Change license" \
+						"7" "Check License" $hostweb2 3>&1 1>&2 2>&3)
 exitpara=$?
 if [ $exitpara = 0 ]; then
 
 						
-#	if [ $ManageCA = "1" ]; then
-#	fi
+	if [ $ManageCA = "1" ]; then
+	importCA=$(whiptail --title "Import certificate" --inputbox "Import certificate PKCS12 (.pfx or .p12)" 10 60 /tmp/certificate.pfx --nocancel 3>&1 1>&2 2>&3)
+	extensionca=${importCA##*.}
+        if [ -e "$importCA" ] && ([ "$extensionca" = "pfx" ] || [ "$extensionca" = "p12" ]); then
+			psimportCA=$(whiptail --title "Password CA" --inputbox "Password : " 10 60  --nocancel 3>&1 1>&2 2>&3)
+			if [ "$psimportCA" -z ]; then
+			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys 
+			else
+			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys -passin $psimportCA
+			fi
+		openssl pkcs12 -in $importCA -out /tmp/newfile.key.pem -nocerts -nodes 
+		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+		check_os
+	     
+			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+			then
+			echo "Debian or Ubuntu"
+			apt-get update
+			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+			cd /tmp/
+			#rm -f /tmp/f-secure-threatshield*
+			wget -t 5 $deblinkthreat
+			dpkg -i $vrdebthreat
+			fi
+		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/newfile.crt.pem --key /tmp/newfile.key.pem
+		
+		else
+		whiptail --title "Import CA format" --msgbox "This certificate is not valid or the file doesn't exist" 10 60
+		exit
+		fi
+	
+	
+	fi
 	
 	if [ $ManageCA = "2" ]; then
 		ManageCANewKey=$(whiptail --title "Choose algorithm" --menu "Choose the algorithm, you need a file for DSA and EC" 15 80 5 \
 		"1" "RSA" \
-		"2" "DSA" \
-		"3" "EC" 3>&1 1>&2 2>&3)
+		"2" "DSA -- Soon" \
+		"3" "EC -- Soon" 3>&1 1>&2 2>&3)
 		
 		if [ $ManageCANewKey = "1" ]; then
 		RSABits=$(whiptail --title "Choose bits size RSA" --inputbox "RSA bits size " 10 60 2048 --nocancel 3>&1 1>&2 2>&3)
 		RSABname=$(whiptail --title "Choose CA name" --inputbox "CA name " 10 60 certificate --nocancel 3>&1 1>&2 2>&3)
 		openssl req -newkey rsa:$RSABits -nodes -keyout /tmp/$RSABname"_key.pem" -x509 -out /tmp/$RSABname"_certificate.pem"
 		openssl pkcs12 -export -in /tmp/$RSABname"_certificate.pem" -inkey /tmp/$RSABname"_key.pem" -out $RSABname".pfx"
+		whiptail --title "Certificat" --msgbox "New certicates are available in '/tmp' folder in PEM and PFX" 10 60
 		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
 	
 		
@@ -772,13 +809,7 @@ if [ $exitpara = 0 ]; then
 			then
 			echo "Debian or Ubuntu"
 			apt-get update
-				if [ "$distri_version" -ge 1804 ]
-				then
-				apt-get install curl libcurl4 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
-				echo "version 18.04"
-				else
-				apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
-				fi
+			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
 			cd /tmp/
 			#rm -f /tmp/f-secure-threatshield*
 			wget -t 5 $deblinkthreat
@@ -790,16 +821,6 @@ if [ $exitpara = 0 ]; then
 	
 
 fi
-
-
-
-#Import CA
-#Add new CA
-#Convert multi CA
-#PKCS12 to PEM
-#openssl pkcs12 -in path.p12 -out newfile.crt.pem -clcerts -nokeys
-#openssl pkcs12 -in path.p12 -out newfile.key.pem -nocerts -nodes
-#openssl pkcs12 -in path.p12 -out newfile.crt.pem -clcerts -nokeys -passin 'pass:P@s5w0rD'
 
 #activate transparent mode 
 #echo 1 > /etc/opt/f-secure/fsbg/mgmt/settings/1.3.6.1.4.1.2213.47.1.10.210.80
