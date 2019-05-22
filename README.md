@@ -5,7 +5,6 @@
 This script allows :
 
  - Automatic installation of Policy Manager server on Linux (Debian, Ubuntu and CentOS atm)
- - Install HotFix
  - Check and modify the ports used
  - Check communication with F-Secure servers
  - Policy Manager Database maintenance
@@ -13,7 +12,7 @@ This script allows :
  - Reset admin password
  - Check and force database update (Dropped with v13)
  - Create a FSDIAG package for support
- - Install PMP (New)
+ - Install Proxy Policy Manager
  
 
 #### INSTALLATION
@@ -45,4 +44,3 @@ PM Proxy install menu :
 #### Roadmap
 
 - Add Linux Security Setup
-- Add ThreatShield Setup and automatique configuration 
