@@ -3,18 +3,12 @@
 #Variable
 #FSPMS DEB / RPM
 
-deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_14.00.87145_amd64.deb"
-deblinkfspms13="https://download.f-secure.com/corpro/pm_linux/pm_linux13.1x/fspms_13.11.84108_amd64.deb"
-
-rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-14.00.87145-1.x86_64.rpm"
-rpmlinkfspms13="https://download.f-secure.com/corpro/pm_linux/pm_linux13.1x/fspms-13.11.84108-1.x86_64.rpm"
-
+deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_14.10.88509_amd64.deb"
+rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-14.10.88509-1.x86_64.rpm"
 
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
-vdebfspms13=$(echo $deblinkfspms13|cut -d"/" -f7)
-
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
-vrpmfspms13=$(echo $rpmlinkfspms13|cut -d"/" -f7)
+
 
 #TreatShield DEB
 deblinkthreat="https://download.f-secure.com/corpro/threatshield/current/f-secure-threatshield_6.0.6-1_amd64.deb"
@@ -24,8 +18,8 @@ vrdebthreat=$(echo $deblinkthreat|cut -d"/" -f7)
 
 #FSPMP DEB/RPM
 
-deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_14.00.87145_amd64.deb"
-rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-14.00.87145-1.x86_64.rpm"
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_14.10.88509_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-14.10.88509-1.x86_64.rpm"
 vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
 vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
@@ -126,27 +120,22 @@ while [ "$menu" != 1 ]; do
 OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy Manager for Linux" --fb --cancel-button "Exit" 30 70 10 \
 "1" "Install / Update" \
 "2" "Port Used" \
-"3" "Install HotFix (Dropped)" \
 "4" "Check F-secure communication" \
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy 14" \
-"9" "Install ThreatShield" 3>&1 1>&2 2>&3)
+"8" "Install PM Proxy 14" 3>&1 1>&2 2>&3)
+
+
+#"3" "Install HotFix (Dropped)" \
+#"9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
      
 	if [ "$OPTION" = "1" ]; then
-       
-	   chooseVersion=$(whiptail --title "Choose version" --menu "Choose version of Policy Manager" 15 80 5 \
-                        "1" "Policy Manager 13.11" \
-                        "2" "Policy Manager 14.00"$hostweb2 3>&1 1>&2 2>&3)
-                        #exitpara=$?
-                        #if [ $exitpara = 0 ]; then
-	   
-	   
+          
 		check_os
 	
 
@@ -159,12 +148,7 @@ if [ $exitstatus = 0 ]; then
 		yum install net-tools -y
 		cd /tmp/
            	rm -f /tmp/fspm*
-				if [ $chooseVersion = "1" ]; then
-					wget -t 5 $rpmlinkfspms13
-				fi
-				if [ $chooseVersion = "2" ]; then
-					wget -t 5 $rpmlinkfspms
-				fi
+			wget -t 5 $rpmlinkfspms
               	#check bdd
            	if [ -e /var/opt/f-secure/fspms/data/h2db/fspms.h2.db ]; then
 		reup=1
@@ -177,13 +161,8 @@ if [ $exitstatus = 0 ]; then
            	fi
            	#install
 			
-			if [ $chooseVersion = "1" ]; then
-                rpm -i /tmp/$vrpmfspms13
-			fi
-			if [ $chooseVersion = "2" ]; then
-                rpm -i /tmp/$vrpmfspms
-			fi
-			
+            rpm -i /tmp/$vrpmfspms
+		
            	#suppression des paquets
            	rm -f /tmp/fspm*  
 		if [ "$reup" = 1 ]; then
@@ -209,12 +188,8 @@ if [ $exitstatus = 0 ]; then
            apt-get install libstdc++5 libstdc++5:i386 libstdc++6 libstdc++6:i386 -y
            cd /tmp/
 		   rm -f /tmp/fspm*
-			if [ $chooseVersion = "1" ]; then
-					wget -t 5 $deblinkfspms13
-				fi
-				if [ $chooseVersion = "2" ]; then
-					wget -t 5 $deblinkfspms
-				fi
+		   wget -t 5 $deblinkfspms
+		   
            #check service fspms
            #check bdd
            if [ -e /var/opt/f-secure/fspms/data/h2db/fspms.h2.db ]; then
@@ -227,12 +202,7 @@ if [ $exitstatus = 0 ]; then
 	   reup=0
            fi
            #install
-		   if [ $chooseVersion = "1" ]; then
-					dpkg -i /tmp/$vdebfspms13
-				fi
-				if [ $chooseVersion = "2" ]; then
-					dpkg -i /tmp/$vdebfspms
-				fi
+			dpkg -i /tmp/$vdebfspms
 
            #suppression des paquets
            rm /tmp/fspm*  
