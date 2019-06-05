@@ -143,7 +143,8 @@ if [ $exitstatus = 0 ]; then
         then
         echo "centoS";
 		yum update
-		yum install libstd++.i686 -y
+		yum install libstdc++.i686 -y
+		yum install libstdc++ -y
 		yum install wget -y
 		yum install net-tools -y
 		cd /tmp/
