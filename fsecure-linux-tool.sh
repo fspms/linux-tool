@@ -3,8 +3,8 @@
 #Variable
 #FSPMS DEB / RPM
 
-deblinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms_14.10.88509_amd64.deb"
-rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/current/fspms-14.10.88509-1.x86_64.rpm"
+deblinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux14.20/fspms_14.20.88937_amd64.deb"
+rpmlinkfspms="https://download.f-secure.com/corpro/pm_linux/pm_linux14.20/fspms-14.20.88937-1.x86_64.rpm"
 
 vdebfspms=$(echo $deblinkfspms|cut -d"/" -f7)
 vrpmfspms=$(echo $rpmlinkfspms|cut -d"/" -f7)
@@ -18,8 +18,8 @@ vrdebthreat=$(echo $deblinkthreat|cut -d"/" -f7)
 
 #FSPMP DEB/RPM
 
-deblinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp_14.10.88509_amd64.deb"
-rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/current/fspmp-14.10.88509-1.x86_64.rpm"
+deblinkpmp="https://download.f-secure.com/corpro/pm_linux/pm_linux14.20/fspmp_14.20.88937_amd64.deb"
+rpmlinkpmp="https://download.f-secure.com/corpro/pm_linux/pm_linux14.20/fspmp-14.20.88937-1.x86_64.rpm"
 vrpmpmp=$(echo $rpmlinkpmp|cut -d"/" -f7)
 vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 
