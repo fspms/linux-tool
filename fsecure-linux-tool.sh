@@ -737,8 +737,9 @@ if [ $exitpara = 0 ]; then
 			if [ "$distri" = "ubuntu" ]
 			then
 			echo "Ubuntu"
-			cp $LicenceRadarScanNode /root/
-			mv /root/$LicenceRadarScanNode /root/license.fsrl
+			cp $LicenceRadarScanNode /root/license.fsrl
+			cp $LicenceRadarScanNode /opt/f-secure/radar-scannodeagent/license.fsrl
+			
 			cd /tmp/
 			wget -q -t 5 $RadarScanNodeMicrosoft
 			sudo dpkg -i /tmp/packages-microsoft-prod.deb
