@@ -27,6 +27,12 @@ vdebpmp=$(echo $deblinkpmp|cut -d"/" -f7)
 lastversion=$(echo $vdebfspms|cut -d"_" -f2)
 
 
+#RadarScannode
+RadarScanNodeLink="https://updates-api.radar.f-secure.com/api/1.1/ProductUpdates/Components/ScanNodeAgent/Releases/4.0.0.0/Download"
+RadarScanNodeMicrosoft="https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb"
+
+
+
 ################################################################################################################
 check_os () {
 
@@ -124,11 +130,10 @@ OPTION=$(whiptail --title "F-Secure Linux Tool" --menu "Manage F-Secure Policy M
 "5" "Database tool" \
 "6" "Reset admin password" \
 "7" "FSDIAG" \
-"8" "Install PM Proxy 14" 3>&1 1>&2 2>&3)
+"8" "Install PM Proxy" \
+"9" "Install Radar Scan Node" 3>&1 1>&2 2>&3)
 
 
-#"3" "Install HotFix (Dropped)" \
-#"9" "Install ThreatShield" 3>&1 1>&2 2>&3)
 #clear
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -712,85 +717,66 @@ if [ "$OPTION" = "9" ]; then
 
 #GESTION CA
 
-ManageCA=$(whiptail --title "CA for ThreatShield" --menu "Choose a option for your certificate" 15 80 5 \
-                        "1" "Import your certificate" \
-                        "2" "Generate new certificate" \
-						"3" "Transparent mode -- Soon" \
-						"4" "Access log -- Soon" \
-						"5" "Number of connection -- Soon" \
-						"6" "Change license -- Soon" \
-						"7" "Check License-- Soon" $hostweb2 3>&1 1>&2 2>&3)
+RadarMenu=$(whiptail --title "Radar Scan Node" --menu "Choose a option for your certificate" 15 80 5 \
+                        "1" "Installation" \
+                        "2" "Logs" \
+						"3" "Services" \
+						"4" "Updating scan engines manually" \
+						"5" "Resetting Scan engines" \
+						"6" "Uninstalling scan nodes" 3>&1 1>&2 2>&3)
 exitpara=$?
 if [ $exitpara = 0 ]; then
 
 						
-	if [ $ManageCA = "1" ]; then
-	importCA=$(whiptail --title "Import certificate" --inputbox "Import certificate PKCS12 (.pfx or .p12)" 10 60 /tmp/certificate.pfx --nocancel 3>&1 1>&2 2>&3)
-	extensionca=${importCA##*.}
-        if [ -e "$importCA" ] && ([ "$extensionca" = "pfx" ] || [ "$extensionca" = "p12" ]); then
-			psimportCA=$(whiptail --title "Password CA" --inputbox "Password : " 10 60  --nocancel 3>&1 1>&2 2>&3)
-			if [ "$psimportCA" -z ]; then
-			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys 
-			else
-			openssl pkcs12 -in $importCA -out /tmp/newfile.crt.pem -clcerts -nokeys -passin $psimportCA
-			fi
-		openssl pkcs12 -in $importCA -out /tmp/newfile.key.pem -nocerts -nodes 
-		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+	if [ $RadarMenu = "1" ]; then
+	LicenceRadarScanNode=$(whiptail --title "Import License" --inputbox "Import license Radar Scan Node (.fsrl)" 10 60 /tmp/license.fsrl --nocancel 3>&1 1>&2 2>&3)
+        if [ -e "$LicenceRadarScanNode" ]; then
+		
 		check_os
 	     
-			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
+			if [ "$distri" = "ubuntu" ]
 			then
-			echo "Debian or Ubuntu"
-			apt-get update
-			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
+			echo "Ubuntu"
+			cp $LicenceRadarScanNode /root/
+			mv /root/$LicenceRadarScanNode /root/license.fsrl
 			cd /tmp/
-			#rm -f /tmp/f-secure-threatshield*
-			wget -t 5 $deblinkthreat
-			dpkg -i $vrdebthreat
+			wget -q -t 5 $RadarScanNodeMicrosoft
+			sudo dpkg -i /tmp/packages-microsoft-prod.deb
+			apt-get update
+			apt-get install libcurl4:amd64 libc-dev-bin libc6-dev linux-libc-dev manpages-dev aspnetcore-runtime-2.2 dialog dotnet-host dotnet-hostfxr-2.2 dotnet-runtime-2.2 dotnet-runtime-deps-2.2 liblttng-ust-ctl4 liblttng-ust0 liburcu6 powershell -y
+			rm -f /tmp/f-secure-radar-scannodeagent-installer*
+			wget -P /tmp/ --content-disposition $RadarScanNodeLink
+			whiptail --title "License" --msgbox "Fill in the following path : /root/license.fsrl" 10 60
+			dpkg -i /tmp/f-secure-radar-scannodeagent-installer*
 			fi
-		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/newfile.crt.pem --key /tmp/newfile.key.pem
 		
 		else
-		whiptail --title "Import CA format" --msgbox "This certificate is not valid or the file doesn't exist" 10 60
+		whiptail --title "Import License" --msgbox "You need a license file to install the Radar Scan Node agent. Please connect to your Radar Portal" 10 60
 		fi
 	
 	
 	fi
 	
-	if [ $ManageCA = "2" ]; then
-		ManageCANewKey=$(whiptail --title "Choose algorithm" --menu "Choose the algorithm, you need a file for DSA and EC" 15 80 5 \
-		"1" "RSA" \
-		"2" "DSA -- Soon" \
-		"3" "EC -- Soon" 3>&1 1>&2 2>&3)
-		
-		if [ $ManageCANewKey = "1" ]; then
-		RSABits=$(whiptail --title "Choose bits size RSA" --inputbox "RSA bits size " 10 60 2048 --nocancel 3>&1 1>&2 2>&3)
-		RSABname=$(whiptail --title "Choose CA name" --inputbox "CA name " 10 60 certificate --nocancel 3>&1 1>&2 2>&3)
-		openssl req -newkey rsa:$RSABits -nodes -keyout /tmp/$RSABname"_key.pem" -x509 -out /tmp/$RSABname"_certificate.pem"
-		openssl pkcs12 -export -in /tmp/$RSABname"_certificate.pem" -inkey /tmp/$RSABname"_key.pem" -out $RSABname".pfx"
-		whiptail --title "Certificat" --msgbox "New certicates are available in '/tmp' folder in PEM and PFX" 10 60
-		tslicense=$(whiptail --title "ThreadShield License" --inputbox "ThreatShield License" 10 60 XXXX-XXXX-XXXX-XXXX-XXXX --nocancel 3>&1 1>&2 2>&3)
+	if [ $RadarMenu = "2" ]; then
+		tail -f /opt/f-secure/radar-scannodeagent/logs/sn-agent-current.log
+		fi
+	fi
 	
-		
-		check_os
-	     
-			if [ "$distri" = "debian" ] || [ "$distri" = "ubuntu" ]
-			then
-			echo "Debian or Ubuntu"
-			apt-get update
-			apt-get install curl libcurl3 libsasl2-modules-gssapi-mit libssh2-1 libfuse2 libpam-modules libwrap0 openssh-server python zlib1g -y
-			cd /tmp/
-			#rm -f /tmp/f-secure-threatshield*
-			wget -t 5 $deblinkthreat
-			dpkg -i $vrdebthreat
-			fi
-		/opt/f-secure/threatshield/bin/activate --licensekey $tslicense --certificate /tmp/$RSABname"_certificate.pem" --key /tmp/$RSABname"_key.pem"
+	
+	if [ $RadarMenu = "7" ]; then
+		##Applying new license manually## 
+		#Install SDK requierements
+		sudo apt install software-properties-common
+		sudo add-apt-repository universe
+		sudo apt-get update
+		sudo apt-get install apt-transport-https
+		sudo apt-get update
+		sudo apt-get install dotnet-sdk-3.0
 		fi
 	fi
 fi
 
-#activate transparent mode 
-#echo 1 > /etc/opt/f-secure/fsbg/mgmt/settings/1.3.6.1.4.1.2213.47.1.10.210.80
+	
 
 fi
 
