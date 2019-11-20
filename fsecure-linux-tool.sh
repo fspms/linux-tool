@@ -759,7 +759,7 @@ if [ $exitpara = 0 ]; then
 	
 	if [ $RadarMenu = "2" ]; then
 		tail -f /opt/f-secure/radar-scannodeagent/logs/sn-agent-current.log
-		fi
+		
 	fi
 	
 	
@@ -772,7 +772,7 @@ if [ $exitpara = 0 ]; then
 		sudo apt-get install apt-transport-https
 		sudo apt-get update
 		sudo apt-get install dotnet-sdk-3.0
-		fi
+	
 	fi
 fi
 
